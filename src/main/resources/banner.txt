@@ -11,4 +11,8 @@ ${AnsiColor.BRIGHT_GREEN}
 
             :- Java Coding Example -:
 
+<<<<<<< HEAD
 ${Ansi.DEFAULT}
+=======
+${Ansi.DEFAULT}
+>>>>>>> 8706ec8f1579f124ce7ae653f3b7b0a57a2b1fd8
