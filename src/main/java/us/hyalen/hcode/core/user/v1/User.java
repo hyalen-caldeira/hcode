@@ -1,4 +1,6 @@
 package us.hyalen.hcode.core.user.v1;
 
-public class User {
+import us.hyalen.hcode.core.Domain;
+
+public class User extends Domain {
 }
