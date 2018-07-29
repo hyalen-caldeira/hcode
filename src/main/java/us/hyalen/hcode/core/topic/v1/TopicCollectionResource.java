@@ -1,4 +1,4 @@
-package us.hyalen.hcode.core.topic;
+package us.hyalen.hcode.core.topic.v1;
 
 public class TopicCollectionResource {
 }

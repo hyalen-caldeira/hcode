@@ -1,4 +1,4 @@
-package us.hyalen.hcode.core.role;
+package us.hyalen.hcode.core.role.v1;
 
 public class RoleCollectionResource {
 }
