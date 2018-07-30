@@ -7,7 +7,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "roles")
 @Data
-public class Role {
+public class RoleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -17,11 +17,11 @@ public class Role {
     @Column(length = 60)
     private RoleName name;
 
-    public Role() {
+    public RoleModel() {
 
     }
 
-    public Role(RoleName name) {
+    public RoleModel(RoleName name) {
         this.name = name;
     }
 }

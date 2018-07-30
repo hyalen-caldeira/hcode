@@ -1,5 +1,7 @@
 package us.hyalen.hcode.core;
 
+import lombok.Setter;
+
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import java.util.ArrayList;
@@ -7,6 +9,7 @@ import java.util.List;
 import java.util.Set;
 
 abstract public class Domain {
+    @Setter
     protected static Validator validator;
     protected List<ValidationError> validationErrors = new ArrayList<>();
 
@@ -20,16 +23,13 @@ abstract public class Domain {
 
     public void validate() {
         Set<ConstraintViolation<Domain>> constraintViolations = validator.validate(this);
+
         constraintViolations.forEach(error ->
-                validationErrors.add(new ValidationError(error.getPropertyPath().toString(), error.getMessage()))
+            validationErrors.add(new ValidationError(error.getPropertyPath().toString(), error.getMessage()))
         );
 
         if (validationErrors.size() > 0) {
             throw new InvalidFieldException(getClass().getSimpleName() + " has validation errors", validationErrors);
         }
-    }
-
-    public static void setValidator(Validator validator) {
-        Domain.validator = validator;
     }
 }
