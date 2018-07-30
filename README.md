@@ -1,17 +1,40 @@
 # hCode by Hyalen
 
-Hello and Welcome to an exciting system of Algorithms Control where I'm developing an 
-end-to-end full stack algorithm app similar to LeetCode.
+Hello and Welcome to an exciting system of _Algorithms Control_ where I'm developing an 
+end-to-end full stack _Algorithm App_ similar to LeetCode.
 
-I’ve built the backend server using Spring Boot where I used Spring Security along 
-with JWT authentication. The app configuration model was developed using Spring Cloud.
-For storage I'm using MySQL database.
+I’ve built the backend server using **_Spring Boot_** where I used **_Spring Security_** along 
+with **_JWT_** authentication. The app configuration model was developed using **_Spring Cloud_**.
+For storage I'm using **_MySQL_** database.
 
-The front-end application was built using React. I've also used React Bootstrap for 
+The frontend application was built using **_React_**. I've also used **_React Bootstrap_** for 
 designing the user interface.
 
 The application was totally developed from scratch and you can get all the source code
-hosted on GitHub as reference for a complete full stack application.
+hosted on **_GitHub_** as reference for a complete full stack application.
+
+### Development Steps
+##### Creating the Backend Application using Spring Boot
+* 
+*
+##### Adding additional dependencies/libraries
+* 
+*
+##### Configuring the Server, Database, Hibernate and Jackson
+* 
+*
+##### Configuring Spring Boot to use Java 8 Date/Time converters and UTC Timezone
+* 
+*
+##### Creating the domain models
+* 
+*
+##### Creating the Repositories for accessing models data
+* 
+*
+##### Configuration and Dependency Inject
+* 
+*
 
 ## Spring Cloud Config
 #### Client Configuration
