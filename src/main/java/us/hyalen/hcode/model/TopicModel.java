@@ -1,4 +1,4 @@
 package us.hyalen.hcode.model;
 
-public class Session {
+public class TopicModel {
 }

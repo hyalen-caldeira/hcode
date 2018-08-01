@@ -1,5 +1,6 @@
 package us.hyalen.hcode.model;
 
+import lombok.NoArgsConstructor;
 import us.hyalen.hcode.model.audit.DateAudit;
 import lombok.Data;
 import org.hibernate.annotations.NaturalId;
@@ -14,50 +15,50 @@ import java.util.Set;
 @Entity
 @Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "username"
+                "userName"
         }),
         @UniqueConstraint(columnNames = {
                 "email"
         })
 })
 @Data
-public class User extends DateAudit {
+@NoArgsConstructor
+public class UserModel extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "USER_ID")
+    private Long userId;
 
     @NotBlank
     @Size(max = 40)
-    private String name;
+    @Column(name = "USER_FIRST_NAME")
+    private String firstName;
 
     @NotBlank
     @Size(max = 15)
-    private String username;
+    @Column(name = "USER_LAST_NAME")
+    private String lastName;
 
     @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
+    @Column(name = "USER_EMAIL")
     private String email;
 
     @NotBlank
     @Size(max = 100)
+    @Column(name = "USER_LOGIN")
+    private String login;
+
+    @NotBlank
+    @Size(max = 100)
+    @Column(name = "USER_PASSWORD")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Set<Role> roles = new HashSet<>();
-
-    public User() {
-
-    }
-
-    public User(String name, String username, String email, String password) {
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-    }
+    @JoinTable(name = "USER_ROLE",
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+    private Set<RoleModel> roles = new HashSet<>();
 }
