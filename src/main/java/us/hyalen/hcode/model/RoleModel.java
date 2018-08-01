@@ -5,7 +5,7 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "roles")
+@Table(name = "ROLES")
 @Data
 public class RoleModel {
     @Id

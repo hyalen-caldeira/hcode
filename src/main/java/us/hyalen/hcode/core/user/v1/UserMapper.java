@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 import us.hyalen.hcode.model.UserModel;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
@@ -35,8 +35,8 @@ public interface UserMapper {
     }
 
     // ====================== Domain to Model
-    @Mapping(target = "updated_at", ignore = true)
-    @Mapping(target = "created_at", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
     UserModel mapDomainToModel(User user);
 
 

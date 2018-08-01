@@ -1,8 +1,9 @@
 package us.hyalen.hcode.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import us.hyalen.hcode.model.audit.DateAudit;
-import lombok.Data;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
@@ -15,13 +16,14 @@ import java.util.Set;
 @Entity
 @Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "userName"
+                "USER_LOGIN"
         }),
         @UniqueConstraint(columnNames = {
-                "email"
+                "USER_EMAIL"
         })
 })
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class UserModel extends DateAudit {
     @Id
