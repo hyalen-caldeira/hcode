@@ -14,7 +14,7 @@ public class User extends Domain {
     @Setter
     private static UserDao userDao;
 
-    private Long userId;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -23,8 +23,8 @@ public class User extends Domain {
 
     private User() {}
 
-    public static Optional<User> findByUserId(Long userId) {
-        return userDao.findByUserId(userId);
+    public static Optional<User> findById(Long id) {
+        return userDao.findByUserId(id);
     }
 
     // TODO Confirm the List<User>
@@ -66,8 +66,8 @@ public class User extends Domain {
             return userMapper.mapModelToDomainBuilder(userModel);
         }
 
-        public Builder withUserId(Long userId) {
-            user.userId = userId;
+        public Builder withId(Long id) {
+            user.id = id;
             return this;
         }
 

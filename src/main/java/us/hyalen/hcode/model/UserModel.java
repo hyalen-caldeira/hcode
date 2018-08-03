@@ -1,5 +1,6 @@
 package us.hyalen.hcode.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,51 +17,44 @@ import java.util.Set;
 @Entity
 @Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "USER_LOGIN"
+                "login"
         }),
         @UniqueConstraint(columnNames = {
-                "USER_EMAIL"
+                "email"
         })
 })
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 public class UserModel extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long userId;
+    private Long id;
 
     @NotBlank
-    @Size(max = 40)
-    @Column(name = "USER_FIRST_NAME")
+    @Size(max = 20)
     private String firstName;
 
     @NotBlank
-    @Size(max = 15)
-    @Column(name = "USER_LAST_NAME")
+    @Size(max = 20)
     private String lastName;
 
     @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
-    @Column(name = "USER_EMAIL")
     private String email;
 
     @NotBlank
-    @Size(max = 100)
-    @Column(name = "USER_LOGIN")
+    @Size(max = 40)
     private String login;
 
     @NotBlank
-    @Size(max = 100)
-    @Column(name = "USER_PASSWORD")
+    @Size(max = 20)
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USER_ROLE",
-            joinColumns = @JoinColumn(name = "USER_ID"),
-            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<RoleModel> roles = new HashSet<>();
 }

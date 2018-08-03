@@ -1,12 +1,14 @@
 package us.hyalen.hcode.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ROLES")
+@Table(name = "ROLE")
 @Data
+@NoArgsConstructor
 public class RoleModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,12 +18,4 @@ public class RoleModel {
     @NaturalId
     @Column(length = 60)
     private RoleName name;
-
-    public RoleModel() {
-
-    }
-
-    public RoleModel(RoleName name) {
-        this.name = name;
-    }
 }

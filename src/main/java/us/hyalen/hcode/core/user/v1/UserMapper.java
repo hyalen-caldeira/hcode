@@ -15,7 +15,7 @@ public interface UserMapper {
             return null;
 
         return new User.Builder()
-                .withUserId(model.getUserId())
+                .withId(model.getId())
                 .withFirstName(model.getFirstName())
                 .withLastName(model.getLastName())
                 .withEmail(model.getEmail())
@@ -26,7 +26,7 @@ public interface UserMapper {
     // ====================== Resource to DomainBuilder
     default User.Builder mapResourceToDomainBuilder(UserResource resource) {
         return new User.Builder()
-                .withUserId(resource.getUserId())
+                .withId(resource.getId())
                 .withFirstName(resource.getFirstName())
                 .withLastName(resource.getLastName())
                 .withEmail(resource.getEmail())
