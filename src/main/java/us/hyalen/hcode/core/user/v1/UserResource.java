@@ -6,7 +6,6 @@ import us.hyalen.hcode.core.role.v1.RoleResource;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
-import java.util.Set;
 
 @Data
 public class UserResource {

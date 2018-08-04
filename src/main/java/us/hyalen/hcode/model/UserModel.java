@@ -1,11 +1,10 @@
 package us.hyalen.hcode.model;
 
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import us.hyalen.hcode.model.audit.DateAudit;
 import org.hibernate.annotations.NaturalId;
+import us.hyalen.hcode.model.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -15,12 +14,12 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "user", uniqueConstraints = {
+@Table(name = "USER", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "login"
+                "LOGIN"
         }),
         @UniqueConstraint(columnNames = {
-                "email"
+                "EMAIL"
         })
 })
 @Setter
@@ -29,33 +28,39 @@ import java.util.Set;
 public class UserModel extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID")
     private Long id;
 
     @NotBlank
     @Size(max = 20)
+    @Column(name = "FIRST_NAME")
     private String firstName;
 
     @NotBlank
     @Size(max = 20)
+    @Column(name = "LAST_NAME")
     private String lastName;
 
     @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
+    @Column(name = "EMAIL")
     private String email;
 
     @NotBlank
     @Size(max = 40)
+    @Column(name = "LOGIN")
     private String login;
 
     @NotBlank
     @Size(max = 20)
+    @Column(name = "PASSWORD")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "USER_ROLE",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
+            joinColumns = @JoinColumn(name = "USER_ID"),
+            inverseJoinColumns = @JoinColumn(name = "ROLE_ID"))
     private Set<RoleModel> roles = new HashSet<>();
 }
