@@ -3,10 +3,14 @@ package us.hyalen.hcode.core.user.v1;
 import lombok.Getter;
 import lombok.Setter;
 import us.hyalen.hcode.core.Domain;
+import us.hyalen.hcode.core.role.v1.RoleResource;
+import us.hyalen.hcode.model.RoleModel;
 import us.hyalen.hcode.model.UserModel;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -20,6 +24,7 @@ public class User extends Domain {
     private String email;
     private String login;
     private String password;
+    private Set<RoleResource> roles;
 
     private User() {}
 
@@ -58,12 +63,16 @@ public class User extends Domain {
             this.user = user;
         }
 
-        public Builder fromResource(UserResource userResource) {
-            return userMapper.mapResourceToDomainBuilder(userResource);
+        public Builder withUserResource(UserResource resource) {
+            userMapper.mapResourceToDomain(resource, user);
+
+            return this;
         }
 
-        public Builder fromModel(UserModel userModel) {
-            return userMapper.mapModelToDomainBuilder(userModel);
+        public Builder withUserModel(UserModel model) {
+            userMapper.mapModelToDomain(model, user);
+
+            return this;
         }
 
         public Builder withId(Long id) {
@@ -93,6 +102,18 @@ public class User extends Domain {
 
         public Builder withPassword(String password) {
             user.password = password;
+            return this;
+        }
+
+        public Builder withRoles(Set<RoleModel> models) {
+            if (models.size() > 0) {
+                user.roles = new HashSet<>();
+
+                models.forEach (model -> {
+                    user.roles.add(userMapper.toRole(model));
+                });
+            }
+
             return this;
         }
 

@@ -22,14 +22,16 @@ public class UserController {
 
     @PostMapping(consumes = UserResource.MEDIA_TYPE)
     public void create(@Valid @RequestBody UserResource resource) {
-        User user = userMapper.mapResourceToDomainBuilder(resource).build();
+        // User user = userMapper.mapResourceToDomain(resource).build();
+        User user = new User.Builder().withUserResource(resource).build();
         user.save();
     }
 
     @PutMapping(value = "/{id:\\d+}", consumes = UserResource.MEDIA_TYPE)
     public void update(@Valid @RequestBody UserResource resource, @PathVariable(value = "id") Long userId) {
         User.findById(userId).orElseThrow(NotFoundException::new);
-        User user = userMapper.mapResourceToDomainBuilder(resource).build();
+        // User user = userMapper.mapResourceToDomain(resource).build();
+        User user = new User.Builder().withUserResource(resource).build();
         user.update();
     }
 

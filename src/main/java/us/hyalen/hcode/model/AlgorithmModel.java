@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ALGORITHM")
+@Table(name = "algorithm")
 @Data
 public class AlgorithmModel {
     @Id

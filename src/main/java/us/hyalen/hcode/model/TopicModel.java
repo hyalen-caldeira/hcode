@@ -5,7 +5,7 @@ import lombok.Data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TOPIC")
+@Table(name = "topic")
 @Data
 public class TopicModel {
     @Id

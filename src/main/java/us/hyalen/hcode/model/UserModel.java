@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "USER", uniqueConstraints = {
+@Table(name = "user", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
                 "login"
         }),
@@ -23,7 +23,8 @@ import java.util.Set;
                 "email"
         })
 })
-@Data
+@Setter
+@Getter
 @NoArgsConstructor
 public class UserModel extends DateAudit {
     @Id

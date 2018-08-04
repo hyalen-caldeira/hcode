@@ -5,6 +5,7 @@ import us.hyalen.hcode.core.role.v1.RoleResource;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -28,5 +29,5 @@ public class UserResource {
     @NotNull
     @Size(max = 20)
     public String password;
-    public Set<RoleResource> roles;
+    public List<RoleResource> roles;
 }

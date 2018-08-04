@@ -10,9 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "COMPANY", uniqueConstraints = {
+@Table(name = "company", uniqueConstraints = {
         @UniqueConstraint(columnNames = {
-                "companyName"
+                "name"
         })
 })
 @Data
@@ -23,11 +23,5 @@ public class CompanyModel {
 
     @NotBlank
     @Size(max = 40)
-    private String companyName;
-
-    public CompanyModel() {}
-
-    public CompanyModel(Company company) {
-
-    }
+    private String name;
 }
