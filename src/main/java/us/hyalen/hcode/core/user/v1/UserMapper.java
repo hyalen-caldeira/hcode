@@ -26,8 +26,8 @@ public interface UserMapper {
     void mapResourceToDomain(UserResource resource, @MappingTarget User user);
 
     // ====================== Domain to Model
-    @Mapping(target = "updatedAt", ignore = true)
-    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "UPDATED_AT", ignore = true)
+    @Mapping(target = "CREATED_AT", ignore = true)
     UserModel mapDomainToModel(User user);
 
     // ====================== Domain to Resource
