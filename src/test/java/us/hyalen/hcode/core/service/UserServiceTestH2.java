@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.ActiveProfiles;
@@ -20,6 +21,7 @@ import static org.junit.Assert.*;
 @ContextConfiguration(classes = Application.class)
 @DataJpaTest
 @WebAppConfiguration
+@SpringBootTest
 @ActiveProfiles("test")
 public class UserServiceTestH2 extends TestH2 {
     @TestConfiguration

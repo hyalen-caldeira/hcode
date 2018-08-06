@@ -19,12 +19,12 @@ public abstract class OverlayH2 {
     abstract String cleanupSqlFilename();
 
     @Autowired
-    @Qualifier("mainSessionFactory")
-    private SessionFactory mainSessionFactory;
+    @Qualifier("hcodeSessionFactory")
+    private SessionFactory hcodeSessionFactory;
 
     @Autowired
-    @Qualifier("transactionManager")
-    private PlatformTransactionManager transactionManager;
+    @Qualifier("hcodeTransactionManager")
+    private PlatformTransactionManager hcodeTransactionManager;
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
@@ -45,23 +45,23 @@ public abstract class OverlayH2 {
     }
 
     private void overlaySql() {
-        TransactionStatus transaction = transactionManager.getTransaction(null);
+        TransactionStatus transaction = hcodeTransactionManager.getTransaction(null);
 
-        mainSessionFactory.getCurrentSession()
+        hcodeSessionFactory.getCurrentSession()
                 .createQuery(readFromUrl(this.getClass().getClassLoader().getResource(inputSqlFilename())))
                 .executeUpdate();
 
-        transactionManager.commit(transaction);
+        hcodeTransactionManager.commit(transaction);
     }
 
     private void cleanupSql() {
-        TransactionStatus transaction = transactionManager.getTransaction(null);
+        TransactionStatus transaction = hcodeTransactionManager.getTransaction(null);
 
-        mainSessionFactory.getCurrentSession()
+        hcodeSessionFactory.getCurrentSession()
                 .createQuery(readFromUrl(this.getClass().getClassLoader().getResource(cleanupSqlFilename())))
                 .executeUpdate();
 
-        transactionManager.commit(transaction);
+        hcodeTransactionManager.commit(transaction);
     }
 
     private String readFromUrl(URL url) {

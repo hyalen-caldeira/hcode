@@ -1,116 +1,117 @@
 package us.hyalen.hcode.config;
 
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
+import org.springframework.orm.jpa.JpaVendorAdapter;
+import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
+import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import org.apache.tomcat.jdbc.pool.DataSource;
+import us.hyalen.hcode.interceptor.EventLogInterceptor;
+
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
 public class DataConfig {
+    @Autowired
+    private Environment environment;
+
     @Bean
     @Primary
-    public HibernateTransactionManager transactionManager(@Qualifier("mainSessionFactory") SessionFactory sessionFactory) {
+    public HibernateTransactionManager hcodeTransactionManager(@Qualifier("hcodeSessionFactory") SessionFactory sessionFactory) {
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory);
 
         return transactionManager;
     }
 
-    /*
     @ConfigurationProperties(prefix = "datasource")
     @Bean
-    @Primary
-    @Profile({"principal", "IntegrationTest"})
-    public DataSource ocdbDataSource(@Value("${locale-alias.ocdb}") String alias) {
-        // emergency brakes
-        if(environment.getProperty("db_ip." + alias).matches(".*sj2.*")) {
-            for (String profileName : environment.getActiveProfiles()) {
-                if(profileName.matches(".*Test.*")) {
-                    throw new RuntimeException("\n\n\n> > > Attempt to run tests with production database detected, execution halted!!! < < <\n\n");
-                }
-            }
-        }
+    public DataSource hcodeDataSource(@Value("${locale-alias.hcode}") String alias) {
         return createDataSource(alias);
     }
 
-    @ConfigurationProperties(prefix = "datasource")
-    @Bean
-    @Profile({"principal", "IntegrationTest"})
-    public DataSource metaDataSource(@Value("${locale-alias.meta}") String alias) {
-            return createDataSource(alias);
-    }
-
-    private DataSource createDataSource(@Value("${meta.locale-alias}") String alias) {
+    private DataSource createDataSource(String alias) {
         String server = environment.getProperty("db_ip." + alias);
         String dbName = environment.getProperty("db_name." + alias);
         Integer port = Integer.parseInt(environment.getProperty("db_port." + alias));
-        String connectDetails = environment.getProperty("db_type." + alias);
-        DBAuthInfo authInfo = new DBAuthInfo(connectDetails);
+
         DataSource dataSource = new DataSource();
-        dataSource.setUrl("jdbc:oracle:thin:@" + server + ":" + port + ":" + dbName);
-        dataSource.setUsername(authInfo.getLoginName());
-        dataSource.setPassword(authInfo.getPassword());
+
+        dataSource.setUrl("jdbc:mysql://" + server + ":" + port + "/" + dbName);
+        dataSource.setUsername("root");
+        dataSource.setPassword("Nicol#3113");
 
         return dataSource;
     }
 
     @Bean
-    @Profile({"principal", "IntegrationTest"})
-    public Properties ocdbHibernateProperties() {
+    public Properties hcodeHibernateProperties() {
         Properties properties = new Properties();
+
         properties.put("hibernate.jdbc.fetch_size", 500);
+
         // Allow System properties to overwrite this, so that in IDE we can set it to show SQL
         if (System.getProperty("hibernate.show_sql") != null) {
             properties.put("hibernate.format_sql", true);
             properties.put("hibernate.show_sql", true);
         } else {
-            properties.put("hibernate.format_sql", false);
-            properties.put("hibernate.show_sql", false);
+            properties.put("hibernate.format_sql", true);
+            properties.put("hibernate.show_sql", true);
         }
-        properties.put("testWhileIdle", true);
-        properties.put("validationQuery", "SELECT 1 FROM DUAL");
 
-        properties.put("hibernate.dialect", "com.conversantmedia.core.OracleDialect");
+        properties.put("testWhileIdle", true);
+        properties.put("validationQuery", "SELECT 1 + 1");
+        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQL5InnoDBDialect");
+        properties.put("hibernate.hbm2ddl.auto", "update");
         // Without below property, ocdbSessionFactory.getCurrentSession() will raise "No CurrentSessionContext configured" exception
         properties.put("hibernate.current_session_context_class","org.springframework.orm.hibernate5.SpringSessionContext");
+
         return properties;
     }
 
     @Bean
-    @Profile({"principal", "IntegrationTest"})
-    @Primary
-    public LocalSessionFactoryBean ocdbSessionFactory(@Qualifier("ocdbHibernateProperties") Properties properties,
-                                                      EventLogInterceptor eventLogInterceptor,
-                                                      @Qualifier("ocdbDataSource") DataSource dataSource) {
+    public LocalSessionFactoryBean hcodeSessionFactory(
+            @Qualifier("hcodeHibernateProperties") Properties properties,
+            EventLogInterceptor eventLogInterceptor,
+            @Qualifier("hcodeDataSource") DataSource dataSource) {
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
+
         localSessionFactoryBean.setDataSource(dataSource);
         localSessionFactoryBean.setHibernateProperties(properties);
-        localSessionFactoryBean.setPackagesToScan("com.conversantmedia.pubby.entity", "com.conversantmedia.core.model.ocdb");
+        localSessionFactoryBean.setPackagesToScan("us.hyalen.hcode.model");
         localSessionFactoryBean.setEntityInterceptor(eventLogInterceptor);
+
         return localSessionFactoryBean;
     }
 
     @Bean
-    @Primary
-    public HibernateTransactionManager transactionManager(@Qualifier("ocdbSessionFactory") SessionFactory sessionFactory) {
-        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
-        transactionManager.setSessionFactory(sessionFactory);
-        return transactionManager;
+    public ValidatorFactory validatorFactory() {
+        return Validation.buildDefaultValidatorFactory();
     }
 
     @Bean
-    @Profile({"principal", "IntegrationTest"})
     @Primary
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("ocdbHibernateProperties") Properties properties,
-                                                                           @Qualifier("ocdbDataSource") DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("hcodeHibernateProperties") Properties properties,
+                                                                       @Qualifier("hcodeDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
+
         em.setDataSource(dataSource);
-        em.setPackagesToScan("com.conversantmedia.core.model.ocdb");
-        em.setPersistenceUnitName("OCDB");
+        em.setPackagesToScan("us.hyalen.hcode.model");
+        em.setPersistenceUnitName("HCODE");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);
@@ -118,5 +119,4 @@ public class DataConfig {
 
         return em;
     }
-     */
 }

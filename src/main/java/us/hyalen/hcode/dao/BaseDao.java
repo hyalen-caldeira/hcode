@@ -18,30 +18,30 @@ import java.util.Set;
 @NoArgsConstructor
 public abstract class BaseDao {
     @Autowired
-    @Qualifier("mainSessionFactory")
-    protected SessionFactory mainSessionFactory;
+    @Qualifier("hcodeSessionFactory")
+    protected SessionFactory hcodeSessionFactory;
 
     @PersistenceContext
     @Getter
     private EntityManager entityManager;
 
     public BaseDao(SessionFactory sessionFactory) {
-        this.setMainSessionFactory(sessionFactory);
+        this.setHcodeSessionFactory(sessionFactory);
     }
 
     protected <E> void mergeAssociation(Set<E> updated, Set<E> existing) {
         // Delete collection elements that were in existing collection but not the updated one
         Set<E> elementsToDelete = Sets.difference(existing, updated);
-        elementsToDelete.forEach(e -> mainSessionFactory.getCurrentSession().delete(e));
+        elementsToDelete.forEach(e -> hcodeSessionFactory.getCurrentSession().delete(e));
 
         // Insert collection elements that were in update collection but not the existing one
         Set<E> elementsToCreate = Sets.difference(updated, existing);
-        elementsToCreate.forEach(e -> mainSessionFactory.getCurrentSession().save(e));
+        elementsToCreate.forEach(e -> hcodeSessionFactory.getCurrentSession().save(e));
 
         // The rest of collection elements need to be merged
         Set<E> elementsToMerge = new HashSet<E>(updated);
         elementsToMerge.removeAll(elementsToDelete);
         elementsToMerge.removeAll(elementsToCreate);
-        elementsToMerge.forEach(e -> mainSessionFactory.getCurrentSession().merge(e));
+        elementsToMerge.forEach(e -> hcodeSessionFactory.getCurrentSession().merge(e));
     }
 }
