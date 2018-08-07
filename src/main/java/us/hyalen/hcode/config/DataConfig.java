@@ -105,8 +105,9 @@ public class DataConfig {
 
     @Bean
     @Primary
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(@Qualifier("hcodeHibernateProperties") Properties properties,
-                                                                       @Qualifier("hcodeDataSource") DataSource dataSource) {
+    public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+            @Qualifier("hcodeHibernateProperties") Properties properties,
+            @Qualifier("hcodeDataSource") DataSource dataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
         em.setDataSource(dataSource);

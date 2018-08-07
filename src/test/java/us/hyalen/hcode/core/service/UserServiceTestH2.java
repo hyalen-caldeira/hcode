@@ -17,23 +17,18 @@ import us.hyalen.hcode.core.user.v1.User;
 
 import static org.junit.Assert.*;
 
-@RunWith(SpringRunner.class)
-@ContextConfiguration(classes = Application.class)
-@DataJpaTest
-@WebAppConfiguration
-@SpringBootTest
 @ActiveProfiles("test")
 public class UserServiceTestH2 extends TestH2 {
-    @TestConfiguration
-    static class UserServiceTestContextConfiguration {
-        @Bean
-        public User.Builder user() {
-            return new User.Builder();
-        }
-    }
-
-    @Autowired
-    private User.Builder user;
+//    @TestConfiguration
+//    static class UserServiceTestContextConfiguration {
+//        @Bean
+//        public User.Builder user() {
+//            return new User.Builder();
+//        }
+//    }
+//
+//    @Autowired
+//    private User.Builder user;
 
     @Override
     public String inputSqlFilename() {
