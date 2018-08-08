@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.orm.hibernate5.HibernateTransactionManager;
@@ -23,12 +22,12 @@ import java.util.Properties;
 
 @EnableTransactionManagement
 @Configuration
-public class DataConfig {
+public class TestDataConfig {
     @Autowired
     private Environment environment;
 
     @Bean
-    @Profile("principal")
+    @Profile("test")
     public Properties hcodeHibernateProperties() {
         Properties properties = new Properties();
 
@@ -55,7 +54,7 @@ public class DataConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "datasource")
-    @Profile("principal")
+    @Profile("test")
     public DataSource hcodeDataSource(@Value("${locale-alias.hcode}") String alias) {
         String server = environment.getProperty("db_ip." + alias);
         String dbName = environment.getProperty("db_name." + alias);
@@ -63,7 +62,7 @@ public class DataConfig {
 
         DataSource dataSource = new DataSource();
 
-        dataSource.setUrl("jdbc:mysql://" + server + ":" + port + "/" + dbName + "?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false");
+        dataSource.setUrl("jdbc:mysql://" + server + ":" + port + "/" + dbName);
         dataSource.setUsername("root");
         dataSource.setPassword("Nicol#3113");
 
@@ -79,8 +78,7 @@ public class DataConfig {
     }
 
     @Bean
-    @Profile("principal")
-    @Primary
+    @Profile("test")
     public LocalSessionFactoryBean hcodeSessionFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
             EventLogInterceptor eventLogInterceptor,
@@ -96,7 +94,7 @@ public class DataConfig {
     }
 
     @Bean
-    @Profile("principal")
+    @Profile("test")
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
             @Qualifier("hcodeDataSource") DataSource dataSource) {
@@ -104,7 +102,7 @@ public class DataConfig {
 
         em.setDataSource(dataSource);
         em.setPackagesToScan("us.hyalen.hcode.model");
-        em.setPersistenceUnitName("HCODE");
+        em.setPersistenceUnitName("HCODETEST");
 
         JpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
         em.setJpaVendorAdapter(vendorAdapter);

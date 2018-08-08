@@ -13,12 +13,11 @@ import javax.persistence.PersistenceContext;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
-@Setter
 @NoArgsConstructor
 public abstract class BaseDao {
     @Autowired
     @Qualifier("hcodeSessionFactory")
+    @Getter
     protected SessionFactory hcodeSessionFactory;
 
     @PersistenceContext
@@ -26,7 +25,7 @@ public abstract class BaseDao {
     private EntityManager entityManager;
 
     public BaseDao(SessionFactory sessionFactory) {
-        this.setHcodeSessionFactory(sessionFactory);
+        this.hcodeSessionFactory = sessionFactory;
     }
 
     protected <E> void mergeAssociation(Set<E> updated, Set<E> existing) {
