@@ -48,13 +48,13 @@ public abstract class OverlayH2 {
     private void overlaySql() {
         TransactionStatus transaction = hcodeTransactionManager.getTransaction(null);
 
-        Query query = hcodeSessionFactory.getCurrentSession()
-                .createNativeQuery("INSERT INTO USER (ID, CREATED_AT, UPDATED_AT, EMAIL, FIRST_NAME, LAST_NAME, LOGIN, PASSWORD) VALUES (1, TIMESTAMP '2014-06-13 15:24:39', TIMESTAMP '2014-06-13 15:24:39', 'hyalen@gmail.com', 'Hyalen', 'Moreira', 'hyalen-login', 'hyalen-password');");
+//        Query query = hcodeSessionFactory.getCurrentSession()
+//                .createNativeQuery("INSERT INTO USER (ID, CREATED_AT, UPDATED_AT, EMAIL, FIRST_NAME, LAST_NAME, LOGIN, PASSWORD) VALUES (1, TIMESTAMP '2014-06-13 15:24:39', TIMESTAMP '2014-06-13 15:24:39', 'hyalen@gmail.com', 'Hyalen', 'Moreira', 'hyalen-login', 'hyalen-password');");
 
-        query.executeUpdate();
+//        query.executeUpdate();
 
         hcodeSessionFactory.getCurrentSession()
-                .createQuery(readFromUrl(this.getClass().getClassLoader().getResource(inputSqlFilename())))
+                .createNativeQuery(readFromUrl(this.getClass().getClassLoader().getResource(inputSqlFilename())))
                 .executeUpdate();
 
         hcodeTransactionManager.commit(transaction);
@@ -64,7 +64,7 @@ public abstract class OverlayH2 {
         TransactionStatus transaction = hcodeTransactionManager.getTransaction(null);
 
         hcodeSessionFactory.getCurrentSession()
-                .createQuery(readFromUrl(this.getClass().getClassLoader().getResource(cleanupSqlFilename())))
+                .createNativeQuery(readFromUrl(this.getClass().getClassLoader().getResource(cleanupSqlFilename())))
                 .executeUpdate();
 
         hcodeTransactionManager.commit(transaction);
