@@ -3,6 +3,7 @@ package us.hyalen.hcode.core;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -32,7 +33,7 @@ public abstract class OverlayH2 {
     public void setupOverlay() {
         if(inputSqlFilename() != null) {
             overlaySql();
-            log.info("Test H2 --->>> SQL H2 OVERLAY APPLIED");
+            log.info("--------->>> SQL H2 OVERLAY APPLIED");
         }
     }
 
@@ -40,12 +41,17 @@ public abstract class OverlayH2 {
     public void cleanupOverlay() {
         if(cleanupSqlFilename() != null) {
             cleanupSql();
-            log.info("Test H2 --->>> SQL H2 CLEANUP APPLIED");
+            log.info("--------->>> SQL H2 CLEANUP APPLIED");
         }
     }
 
     private void overlaySql() {
         TransactionStatus transaction = hcodeTransactionManager.getTransaction(null);
+
+        Query query = hcodeSessionFactory.getCurrentSession()
+                .createNativeQuery("INSERT INTO USER (ID, CREATED_AT, UPDATED_AT, EMAIL, FIRST_NAME, LAST_NAME, LOGIN, PASSWORD) VALUES (1, TIMESTAMP '2014-06-13 15:24:39', TIMESTAMP '2014-06-13 15:24:39', 'hyalen@gmail.com', 'Hyalen', 'Moreira', 'hyalen-login', 'hyalen-password');");
+
+        query.executeUpdate();
 
         hcodeSessionFactory.getCurrentSession()
                 .createQuery(readFromUrl(this.getClass().getClassLoader().getResource(inputSqlFilename())))

@@ -21,12 +21,12 @@ public class UserServiceTestH2 extends TestH2 {
 
     @Override
     public String inputSqlFilename() {
-        return "sql/user/v1/UserTestH2.sql";
+        return "sql/user/v1/user_h2.sql";
     }
 
     @Override
     public String cleanupSqlFilename() {
-        return "sql/user/v1/UserTestH2Cleanup.sql";
+        return "sql/user/v1/user_cleanup_h2.sql";
     }
 
     @Test

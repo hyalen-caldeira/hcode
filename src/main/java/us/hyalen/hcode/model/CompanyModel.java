@@ -9,11 +9,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Entity
-@Table(name = "COMPANY", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "NAME"
-        })
-})
+@Table(
+    name = "COMPANY",
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"NAME"})}
+)
 @Getter
 @Setter
 @NoArgsConstructor

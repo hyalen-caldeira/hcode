@@ -28,7 +28,7 @@ public class DataConfig {
     private Environment environment;
 
     @Bean
-    @Profile("principal")
+    @Profile({"principal", "integrationTest"})
     public Properties hcodeHibernateProperties() {
         Properties properties = new Properties();
 
@@ -55,7 +55,7 @@ public class DataConfig {
 
     @Bean
     @ConfigurationProperties(prefix = "datasource")
-    @Profile("principal")
+    @Profile({"principal", "integrationTest"})
     public DataSource hcodeDataSource(@Value("${locale-alias.hcode}") String alias) {
         String server = environment.getProperty("db_ip." + alias);
         String dbName = environment.getProperty("db_name." + alias);
@@ -79,7 +79,7 @@ public class DataConfig {
     }
 
     @Bean
-    @Profile("principal")
+    @Profile({"principal", "integrationTest"})
     @Primary
     public LocalSessionFactoryBean hcodeSessionFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
@@ -96,7 +96,7 @@ public class DataConfig {
     }
 
     @Bean
-    @Profile("principal")
+    @Profile({"principal", "integrationTest"})
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
             @Qualifier("hcodeDataSource") DataSource dataSource) {
