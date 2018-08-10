@@ -11,7 +11,8 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(
     name = "COMPANY",
-    uniqueConstraints = {@UniqueConstraint(columnNames = {"NAME"})}
+    uniqueConstraints = {@UniqueConstraint(columnNames = {"NAME"})},
+    schema = "HCODEDB"
 )
 @Getter
 @Setter

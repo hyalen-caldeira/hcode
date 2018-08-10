@@ -8,7 +8,7 @@ import org.hibernate.annotations.NaturalId;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ROLE")
+@Table(name = "ROLE", schema = "HCODEDB")
 @Getter
 @Setter
 @NoArgsConstructor

@@ -14,14 +14,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "USER", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "LOGIN"
-        }),
-        @UniqueConstraint(columnNames = {
-                "EMAIL"
-        })
-})
+@Table(name = "USER",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"LOGIN"}),
+        @UniqueConstraint(columnNames = {"EMAIL"})},
+    schema = "HCODEDB")
 @Setter
 @Getter
 @NoArgsConstructor

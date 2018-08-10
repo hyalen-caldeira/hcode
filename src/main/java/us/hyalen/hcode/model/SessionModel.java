@@ -7,7 +7,7 @@ import lombok.Setter;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "SESSION")
+@Table(name = "SESSION", schema = "HCODEDB")
 @Getter
 @Setter
 @NoArgsConstructor
