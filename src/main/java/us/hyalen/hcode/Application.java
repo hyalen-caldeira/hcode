@@ -8,15 +8,15 @@ import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
-@EntityScan(basePackageClasses = {HcodeApplication.class, Jsr310JpaConverters.class})
+@EntityScan(basePackageClasses = {Application.class, Jsr310JpaConverters.class})
 @SpringBootApplication
-public class HcodeApplication {
+public class Application {
 	@PostConstruct
 	void init() {
 		TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
 
 	public static void main(String[] args) {
-		SpringApplication.run(HcodeApplication.class, args);
+		SpringApplication.run(Application.class, args);
 	}
 }

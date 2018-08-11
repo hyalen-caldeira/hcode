@@ -13,29 +13,29 @@ import static org.springframework.http.ResponseEntity.ok;
 public class UserController {
     UserMapper userMapper = UserMapper.INSTANCE;
 
-    @GetMapping(value = "/{userId:\\d+}")
-    public ResponseEntity<UserResource> getUserById(@PathVariable(value = "userId") Long userId) {
-        User user = User.findByUserId(userId).orElseThrow(NotFoundException::new);
+    @GetMapping(value = "/{id:\\d+}")
+    public ResponseEntity<UserResource> getUserById(@PathVariable(value = "id") Long userId) {
+        User user = User.findById(userId).orElseThrow(NotFoundException::new);
 
         return ok(userMapper.mapDomainToResource(user));
     }
 
     @PostMapping(consumes = UserResource.MEDIA_TYPE)
     public void create(@Valid @RequestBody UserResource resource) {
-        User user = userMapper.mapResourceToDomainBuilder(resource).build();
+        User user = new User.Builder().withUserResource(resource).build();
         user.save();
     }
 
-    @PutMapping(value = "/{userId:\\d+}", consumes = UserResource.MEDIA_TYPE)
-    public void update(@Valid @RequestBody UserResource resource, @PathVariable(value = "userId") Long userId) {
-        User.findByUserId(userId).orElseThrow(NotFoundException::new);
-        User user = userMapper.mapResourceToDomainBuilder(resource).build();
+    @PutMapping(value = "/{id:\\d+}", consumes = UserResource.MEDIA_TYPE)
+    public void update(@Valid @RequestBody UserResource resource, @PathVariable(value = "id") Long userId) {
+        User.findById(userId).orElseThrow(NotFoundException::new);
+        User user = new User.Builder().withUserResource(resource).build();
         user.update();
     }
 
-    @DeleteMapping(value = "/{userId:\\d+}")
-    public void delete(@PathVariable(value = "userId") Long userId) {
-        User user = User.findByUserId(userId).orElseThrow(NotFoundException::new);
+    @DeleteMapping(value = "/{id:\\d+}")
+    public void delete(@PathVariable(value = "id") Long userId) {
+        User user = User.findById(userId).orElseThrow(NotFoundException::new);
         user.delete(userId);
     }
 }

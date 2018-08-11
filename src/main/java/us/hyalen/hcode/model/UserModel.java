@@ -1,9 +1,10 @@
 package us.hyalen.hcode.model;
 
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import us.hyalen.hcode.model.audit.DateAudit;
-import lombok.Data;
+import lombok.Setter;
 import org.hibernate.annotations.NaturalId;
+import us.hyalen.hcode.model.audit.DateAudit;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -13,47 +14,45 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "USER", uniqueConstraints = {
-        @UniqueConstraint(columnNames = {
-                "userName"
-        }),
-        @UniqueConstraint(columnNames = {
-                "email"
-        })
-})
-@Data
+@Table(name = "USER",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"LOGIN"}),
+        @UniqueConstraint(columnNames = {"EMAIL"})},
+    schema = "HCODEDB")
+@Setter
+@Getter
 @NoArgsConstructor
 public class UserModel extends DateAudit {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "USER_ID")
-    private Long userId;
+    @Column(name = "ID")
+    private Long id;
 
     @NotBlank
-    @Size(max = 40)
-    @Column(name = "USER_FIRST_NAME")
+    @Size(max = 20)
+    @Column(name = "FIRST_NAME")
     private String firstName;
 
     @NotBlank
-    @Size(max = 15)
-    @Column(name = "USER_LAST_NAME")
+    @Size(max = 20)
+    @Column(name = "LAST_NAME")
     private String lastName;
 
     @NaturalId
     @NotBlank
     @Size(max = 40)
     @Email
-    @Column(name = "USER_EMAIL")
+    @Column(name = "EMAIL")
     private String email;
 
     @NotBlank
-    @Size(max = 100)
-    @Column(name = "USER_LOGIN")
+    @Size(max = 40)
+    @Column(name = "LOGIN")
     private String login;
 
     @NotBlank
-    @Size(max = 100)
-    @Column(name = "USER_PASSWORD")
+    @Size(max = 20)
+    @Column(name = "PASSWORD")
     private String password;
 
     @ManyToMany(fetch = FetchType.LAZY)
