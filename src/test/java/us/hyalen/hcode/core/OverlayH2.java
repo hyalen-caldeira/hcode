@@ -3,7 +3,6 @@ package us.hyalen.hcode.core;
 import com.google.common.base.Charsets;
 import com.google.common.io.Resources;
 import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.junit.After;
 import org.junit.Before;
 import org.slf4j.Logger;
@@ -16,6 +15,8 @@ import org.springframework.transaction.TransactionStatus;
 import java.net.URL;
 
 public abstract class OverlayH2 {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     abstract String inputSqlFilename();
     abstract String cleanupSqlFilename();
 
@@ -26,8 +27,6 @@ public abstract class OverlayH2 {
     @Autowired
     @Qualifier("hcodeTransactionManager")
     private PlatformTransactionManager hcodeTransactionManager;
-
-    private final Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Before
     public void setupOverlay() {

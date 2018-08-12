@@ -1,25 +1,21 @@
 package us.hyalen.hcode.config;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
-import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
-import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import us.hyalen.hcode.interceptor.EventLogInterceptor;
 
 import java.util.Properties;
 
@@ -34,6 +30,7 @@ public class TestDataConfig {
     @Bean
     @Profile("test")
     public Properties hcodeHibernateProperties() {
+        log.info("--------->>> TestDataConfig, SETTING HIBERNATE PROPERTIES");
         Properties properties = new Properties();
 
         properties.put("hibernate.jdbc.fetch_size", 500);
@@ -52,7 +49,7 @@ public class TestDataConfig {
     @ConfigurationProperties(prefix = "datasource")
     @Profile("test")
     public DataSource hcodeDataSource() {
-        log.info("--------->>> INIT H2 HCODEDB, DATA SOURCE <<<---------");
+        log.info("--------->>> TestDataConfig, SETTING DATA SOURCE");
         DataSource dataSource = new DataSource();
 
         // dataSource.setUrl("jdbc:h2:mem:hcodedb;init=runscript from 'classpath:schema-hcodedb.sql';db_close_on_exit=false");
@@ -71,7 +68,7 @@ public class TestDataConfig {
     public LocalSessionFactoryBean hcodeSessionFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
             @Qualifier("hcodeDataSource") DataSource dataSource) {
-        log.info("--------->>> INIT H2 HCODEDB, SESSION FACTORY <<<---------");
+        log.info("--------->>> TestDataConfig, SETTING SESSION FACTORY");
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
 
         localSessionFactoryBean.setDataSource(dataSource);
@@ -86,7 +83,7 @@ public class TestDataConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
             @Qualifier("hcodeDataSource") DataSource dataSource) {
-        log.info("--------->>> INIT H2 HCODEDB, ENTITY MANAGER <<<---------");
+        log.info("--------->>> TestDataConfig, SETTING ENTITY MANAGER FACTORY");
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
         em.setDataSource(dataSource);

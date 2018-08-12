@@ -2,6 +2,8 @@ package us.hyalen.hcode.config;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
 import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,12 +26,15 @@ import java.util.Properties;
 @EnableTransactionManagement
 @Configuration
 public class DataConfig {
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
     @Autowired
     private Environment environment;
 
     @Bean
     @Profile({"principal", "integrationTest"})
     public Properties hcodeHibernateProperties() {
+        log.info("--------->>> DataConfig, SETTING HIBERNATE PROPERTIES");
         Properties properties = new Properties();
 
         properties.put("hibernate.jdbc.fetch_size", 500);
@@ -57,6 +62,7 @@ public class DataConfig {
     @ConfigurationProperties(prefix = "datasource")
     @Profile({"principal", "integrationTest"})
     public DataSource hcodeDataSource(@Value("${locale-alias.hcode}") String alias) {
+        log.info("--------->>> DataConfig, SETTING DATA SOURCE");
         String server = environment.getProperty("db_ip." + alias);
         String dbName = environment.getProperty("db_name." + alias);
         Integer port = Integer.parseInt(environment.getProperty("db_port." + alias));
@@ -72,6 +78,7 @@ public class DataConfig {
 
     @Bean
     public HibernateTransactionManager hcodeTransactionManager(@Qualifier("hcodeSessionFactory") SessionFactory sessionFactory) {
+        log.info("--------->>> DataConfig, SETTING TRANSACTION MANAGER");
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();
         transactionManager.setSessionFactory(sessionFactory);
 
@@ -85,6 +92,7 @@ public class DataConfig {
             @Qualifier("hcodeHibernateProperties") Properties properties,
             EventLogInterceptor eventLogInterceptor,
             @Qualifier("hcodeDataSource") DataSource dataSource) {
+        log.info("--------->>> DataConfig, SETTING SESSION FACTORY");
         LocalSessionFactoryBean localSessionFactoryBean = new LocalSessionFactoryBean();
 
         localSessionFactoryBean.setDataSource(dataSource);
@@ -100,6 +108,7 @@ public class DataConfig {
     public LocalContainerEntityManagerFactoryBean entityManagerFactory(
             @Qualifier("hcodeHibernateProperties") Properties properties,
             @Qualifier("hcodeDataSource") DataSource dataSource) {
+        log.info("--------->>> DataConfig, SETTING ENTITY MANAGER FACTORY");
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
 
         em.setDataSource(dataSource);
