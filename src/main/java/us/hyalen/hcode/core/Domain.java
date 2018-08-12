@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-abstract public class Domain {
+public abstract class Domain {
     @Setter
     protected static Validator validator;
     protected List<ValidationError> validationErrors = new ArrayList<>();

@@ -12,26 +12,23 @@ import java.util.Optional;
 @Component("userDao_v1")
 @Transactional
 public class UserDao extends BaseDao {
-    UserMapper mapper = UserMapper.INSTANCE;
-
     public Optional<User> findByUserId(Long userId) {
         UserModel model = getSessionFactory().getCurrentSession().get(UserModel.class, userId);
         User.Builder builder = (new User.Builder()).withUserModel(model);
-
-        return Optional.ofNullable(builder.build());
+        return Optional.ofNullable(builder == null ? null : builder.build());
     }
 
-    public Long save(User user) {
-        UserModel model = mapper.mapDomainToModel(user);
+    public User create(UserModel model) {
         getSessionFactory().getCurrentSession().save(model);
-
-        return model.getId();
+        return new User.Builder().withUserModel(model).build();
     }
 
-    public void update(User user) {
+    public void update(UserModel model) {
+        getSessionFactory().getCurrentSession().merge(model);
     }
 
-    public void delete(Long userId) {
+    public void delete(UserModel model) {
+        getSessionFactory().getCurrentSession().delete(model);
     }
 
     public List<User> findAllUsers() {

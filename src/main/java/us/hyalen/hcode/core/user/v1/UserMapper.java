@@ -13,16 +13,30 @@ public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
     // ====================== Model to Domain
-    @Mapping(target = "userDao",ignore = true)
-    @Mapping(target = "validator",ignore = true)
-    @Mapping(target = "validationErrors",ignore = true)
+    @Mapping(target = "userDao", ignore = true)
+    @Mapping(target = "validator", ignore = true)
+    @Mapping(target = "validationErrors", ignore = true)
     void mapModelToDomain(UserModel model, @MappingTarget User user);
+
     RoleResource toRole(RoleModel model);
 
+    default User.Builder toDomainBuilder(UserModel model) {
+        if (model == null)
+            return null;
+
+        return new User.Builder()
+                .withId(model.getId())
+                .withFirstName(model.getFirstName())
+                .withLastName(model.getLastName())
+                .withEmail(model.getEmail())
+                .withPassword(model.getPassword())
+                .withRoles(model.getRoles());
+    }
+
     // ====================== Resource to Domain
-    @Mapping(target = "userDao",ignore = true)
-    @Mapping(target = "validator",ignore = true)
-    @Mapping(target = "validationErrors",ignore = true)
+    @Mapping(target = "userDao", ignore = true)
+    @Mapping(target = "validator", ignore = true)
+    @Mapping(target = "validationErrors", ignore = true)
     void mapResourceToDomain(UserResource resource, @MappingTarget User user);
 
     // ====================== Domain to Model
@@ -32,7 +46,4 @@ public interface UserMapper {
 
     // ====================== Domain to Resource
     UserResource mapDomainToResource(User user);
-
-
-
 }

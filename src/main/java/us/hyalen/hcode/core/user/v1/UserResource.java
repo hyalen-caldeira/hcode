@@ -9,7 +9,7 @@ import java.util.List;
 
 @Data
 public class UserResource {
-    public static final String MEDIA_TYPE = "app/us.hyalen.user.v1+json";
+    public static final String MEDIA_TYPE = "application/vnd.hcode.users.v1+json";
 
     @NotNull
     public Long id;

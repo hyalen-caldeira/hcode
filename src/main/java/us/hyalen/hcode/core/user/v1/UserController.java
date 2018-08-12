@@ -16,14 +16,13 @@ public class UserController {
     @GetMapping(value = "/{id:\\d+}")
     public ResponseEntity<UserResource> getUserById(@PathVariable(value = "id") Long userId) {
         User user = User.findById(userId).orElseThrow(NotFoundException::new);
-
         return ok(userMapper.mapDomainToResource(user));
     }
 
     @PostMapping(consumes = UserResource.MEDIA_TYPE)
     public void create(@Valid @RequestBody UserResource resource) {
         User user = new User.Builder().withUserResource(resource).build();
-        user.save();
+        user.create();
     }
 
     @PutMapping(value = "/{id:\\d+}", consumes = UserResource.MEDIA_TYPE)
@@ -36,6 +35,6 @@ public class UserController {
     @DeleteMapping(value = "/{id:\\d+}")
     public void delete(@PathVariable(value = "id") Long userId) {
         User user = User.findById(userId).orElseThrow(NotFoundException::new);
-        user.delete(userId);
+        user.delete();
     }
 }

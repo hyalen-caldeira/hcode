@@ -17,6 +17,7 @@ import java.util.Set;
 public class User extends Domain {
     @Setter
     private static UserDao userDao;
+    private static UserMapper mapper = UserMapper.INSTANCE;
 
     private Long id;
     private String firstName;
@@ -32,28 +33,26 @@ public class User extends Domain {
         return userDao.findByUserId(id);
     }
 
-    // TODO Confirm the List<User>
     public static List<User> findAllUsers() {
         return userDao.findAllUsers();
     }
 
-    public void save() {
+    public User create() {
         validate();
-        userDao.save(this);
+        return userDao.create(mapper.mapDomainToModel(this));
     }
 
     public void update() {
         validate();
-        userDao.update(this);
+        userDao.update(mapper.mapDomainToModel(this));
     }
 
-    public void delete(Long userId) {
-        userDao.delete(userId);
+    public void delete() {
+        userDao.delete(mapper.mapDomainToModel(this));
     }
 
     public static class Builder {
         private User user;
-        private UserMapper userMapper = UserMapper.INSTANCE;
 
         public Builder() {
             this.user = new User();
@@ -64,14 +63,15 @@ public class User extends Domain {
         }
 
         public Builder withUserResource(UserResource resource) {
-            userMapper.mapResourceToDomain(resource, user);
-
+            mapper.mapResourceToDomain(resource, user);
             return this;
         }
 
         public Builder withUserModel(UserModel model) {
-            userMapper.mapModelToDomain(model, user);
+            if (model == null)
+                return null;
 
+            mapper.mapModelToDomain(model, user);
             return this;
         }
 
@@ -110,7 +110,7 @@ public class User extends Domain {
                 user.roles = new HashSet<>();
 
                 models.forEach (model -> {
-                    user.roles.add(userMapper.toRole(model));
+                    user.roles.add(mapper.toRole(model));
                 });
             }
 

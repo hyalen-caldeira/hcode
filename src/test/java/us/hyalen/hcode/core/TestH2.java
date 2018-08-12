@@ -12,7 +12,6 @@ import us.hyalen.hcode.Application;
 @ContextConfiguration(classes = Application.class)
 @WebAppConfiguration
 @SpringBootTest
-// @DataJpaTest
 @ActiveProfiles("test")
 public abstract class TestH2 extends OverlayH2 {
     @Override
