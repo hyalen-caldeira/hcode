@@ -12,10 +12,11 @@ import java.util.Optional;
 
 import static org.junit.Assert.*;
 
+// TODO, Constraint Violation Exception
 @ActiveProfiles("test")
 public class UserTestH2 extends TestH2 {
-    private static final Long EXIST_USER_ID = 1L;
-    private static final Long NON_EXIST_USER_ID = 999L;
+    private final Long EXIST_USER_ID = 1L;
+    private final Long NON_EXIST_USER_ID = 999L;
     private final String FIRST_NAME = "Hyalen";
     private final String LAST_NAME = "Moreira";
     private final String EMAIL = "hyalen@hotmail.com";
@@ -46,27 +47,32 @@ public class UserTestH2 extends TestH2 {
     }
 
     @Test
-    public void when_AValidUserIdIsGiven_then_OptionalTrueIsReturned() {
+    public void when_AValidUserIdIsGiven_then_AValidUSerIsReturned() {
         Optional<User> user = User.findById(EXIST_USER_ID);
         assertTrue(user.isPresent());
     }
 
     @Test
-    public void when_AInvalidUserIdIsGiven_then_OptionalFalseIsReturned() {
+    public void when_AInvalidUserIdIsGiven_then_NothingIsReturned() {
         Optional<User> user = User.findById(NON_EXIST_USER_ID);
         assertFalse(user.isPresent());
     }
 
+    @Test (expected = NotFoundException.class)
+    public void when_AInvalidUserIdIsGIVEN_then_NotFoundExceptionIsThrown() {
+        User user = User.findById(NON_EXIST_USER_ID).orElseThrow(NotFoundException::new);
+    }
+
     @Test
     public void supportsCreatingANewUser() {
-        // Given a valid UserResource
+        // GIVEN a valid UserResource
         UserResource resource = getValidUserResource();
 
-        // When a domain create method is called
+        // WHEN a domain create method is called
         User user = new User.Builder().withUserResource(resource).build();
         user = user.create();
 
-        // Then, User has a correct data and userId generated;
+        // THEN, User has a correct data and userId generated;
         assertNotNull(user.getId());
         assertEquals(user.getFirstName(), FIRST_NAME);
         assertEquals(user.getLastName(), LAST_NAME);
@@ -76,18 +82,33 @@ public class UserTestH2 extends TestH2 {
     }
 
     @Test
-    public void supportsUpdatingUser() {
-        // Given a valid userId, EXIST_USER_ID
+    public void supportsUpdatingAnUser() {
+        // GIVEN a valid userId
+        long userId = EXIST_USER_ID;
 
-        // When update for a valid userId is made
-        updateUser(EXIST_USER_ID);
+        // WHEN update for a valid userId is made
+        updateUser(userId);
 
-        // Then, resource update as expected
-        User savedUser = User.findById(EXIST_USER_ID).orElseThrow(NotFoundException::new);
+        // THEN, resource update as expected
+        User savedUser = User.findById(userId).orElseThrow(NotFoundException::new);
         UserResource resource = UserMapper.INSTANCE.mapDomainToResource(savedUser);
 
         assertEquals(FIRST_NAME_UPDATED, resource.firstName);
         assertEquals(LAST_NAME_UPDATED, resource.lastName);
+    }
+
+    @Test
+    public void supportsDeletingAnUser() {
+        // GIVEN a valid userId
+        long userId = EXIST_USER_ID;
+
+        // WHEN delete for a valid userId is made
+        User user = User.findById(userId).orElseThrow(NotFoundException::new);
+        user.delete();
+
+        // THEN, user is deleted as expected
+        Optional<User> userDeleted = User.findById(userId);
+        assertFalse(userDeleted.isPresent());
     }
 
 

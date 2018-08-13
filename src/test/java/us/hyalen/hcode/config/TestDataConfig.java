@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import java.util.Properties;
 
+// TODO, Get parameters from property file
 @EnableTransactionManagement
 @Configuration
 public class TestDataConfig {
@@ -52,11 +53,9 @@ public class TestDataConfig {
         log.info("--------->>> TestDataConfig, SETTING DATA SOURCE");
         DataSource dataSource = new DataSource();
 
-        // dataSource.setUrl("jdbc:h2:mem:hcodedb;init=runscript from 'classpath:schema-hcodedb.sql';db_close_on_exit=false");
         dataSource.setDriverClassName("org.h2.Driver");
         dataSource.setValidationQuery("SELECT 1 + 1");
         dataSource.setUrl("jdbc:h2:mem:hcodedb;init=runscript from 'classpath:sql/schema/hcodedb_schema.sql';mode=MySql;db_close_on_exit=false");
-        // dataSource.setUrl("jdbc:h2:mem:hcodedb;mode=MySql;db_close_on_exit=false");
         dataSource.setMaxActive(2);
 
         return dataSource;
