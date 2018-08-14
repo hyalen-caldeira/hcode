@@ -11,7 +11,6 @@ import java.util.List;
 public class UserResource {
     public static final String MEDIA_TYPE = "application/vnd.hcode.users.v1+json";
 
-    @NotNull
     public Long id;
     @NotNull
     @Size(max = 20)
