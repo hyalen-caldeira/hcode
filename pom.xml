@@ -113,7 +113,7 @@
 	<build>
 		<testResources>
 			<testResource>
-				<directory>${project.basedir}/src/test/resources</directory>
+				<directory>server/src/test/resources</directory>
 			</testResource>
 		</testResources>
 		<plugins>
