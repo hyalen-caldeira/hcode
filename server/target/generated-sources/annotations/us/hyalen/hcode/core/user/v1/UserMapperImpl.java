@@ -1,4 +1,4 @@
-package us.hyalen.hcode.core.user.v1;
+package us.hyalen.hcode.server.core.user.v1;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Set;
 import javax.annotation.Generated;
 import org.springframework.stereotype.Component;
-import us.hyalen.hcode.core.role.v1.RoleResource;
-import us.hyalen.hcode.model.RoleModel;
-import us.hyalen.hcode.model.RoleName;
-import us.hyalen.hcode.model.UserModel;
+import us.hyalen.hcode.server.core.role.v1.RoleResource;
+import us.hyalen.hcode.server.model.RoleModel;
+import us.hyalen.hcode.server.model.RoleName;
+import us.hyalen.hcode.server.model.UserModel;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
