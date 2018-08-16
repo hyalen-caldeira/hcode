@@ -1,18 +1,25 @@
 package us.hyalen.hcode.core.webapi;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+
+import us.hyalen.hcode.core.NotFoundException;
 import us.hyalen.hcode.core.TestH2;
+import us.hyalen.hcode.core.user.v1.User;
 import us.hyalen.hcode.core.user.v1.UserResource;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.Assert.*;
 
-// TODO, include roles
+// TODO, include test for a set of roles
 @ActiveProfiles("test")
 public class UserControllerTestH2 extends TestH2 {
+    private final String BASE_URI = "/users/";
+
     private final long EXIST_USER_ID = 1L;
     private final long NON_EXIST_USER_ID = 999L;
 
@@ -39,16 +46,19 @@ public class UserControllerTestH2 extends TestH2 {
         return "sql/user/v1/user_cleanup_h2.sql";
     }
 
+    // TODO, fetching all users
+    public void supportsFetchingAllUsers() {
+
+    }
+
     @Test
     public void when_ANonExistUserIdIsGiven_then_ANotFoundStatusIsReturned() throws Exception {
-        mockMvc.perform(get("/users/" + NON_EXIST_USER_ID).accept(UserResource.MEDIA_TYPE))
-                .andExpect(status().isNotFound());
+        getRequest(NON_EXIST_USER_ID).andExpect(status().isNotFound());
     }
 
     @Test
     public void when_AValidUserIdIsGiven_then_AnOkStatusIsReturned() throws Exception {
-        mockMvc.perform(get("/users/" + EXIST_USER_ID).accept(UserResource.MEDIA_TYPE))
-                .andExpect(status().isOk());
+        getRequest(EXIST_USER_ID).andExpect(status().isOk());
     }
 
     @Test
@@ -57,7 +67,7 @@ public class UserControllerTestH2 extends TestH2 {
         long userId = EXIST_USER_ID;
 
         // WHEN a read request is made specifying a valid id parameter
-        ResultActions result = mockMvc.perform(get("/users/" + EXIST_USER_ID).accept(UserResource.MEDIA_TYPE));
+        ResultActions result = getRequest(userId);
 
         // THEN, success response is returned
         result.andExpect(status().isOk());
@@ -73,12 +83,12 @@ public class UserControllerTestH2 extends TestH2 {
     }
 
     @Test
-    public void when_AGetWithANonExistUserIdIsPerformed_then_ANotFoundIsReturned() throws Exception {
+    public void when_AGetWithANonExistUserIdIsPerformed_then_NotFoundIsReturned() throws Exception {
         // GIVEN a non exist userId
         long userId = NON_EXIST_USER_ID;
 
         // WHEN a read request is made specifying a non exist id parameter
-        ResultActions result = mockMvc.perform(get("/users/" + NON_EXIST_USER_ID).accept(UserResource.MEDIA_TYPE));
+        ResultActions result = getRequest(userId);
 
         // THEN, not found response is returned
         result.andExpect(status().isNotFound());
@@ -90,7 +100,7 @@ public class UserControllerTestH2 extends TestH2 {
         UserResource resource = getValidUserResource();
 
         // WHEN a create request is made
-        ResultActions postResult = mockMvc.perform(post("/users")
+        ResultActions postResult = mockMvc.perform(post(BASE_URI)
                 .content(objectMapper.writeValueAsString(resource))
                 .contentType(UserResource.MEDIA_TYPE));
 
@@ -102,10 +112,37 @@ public class UserControllerTestH2 extends TestH2 {
         assertNotNull(location);
 
         // AND new resource can be read using Location header
-        // result = mockMvc.perform(MockMvcRequestBuilders.get("/users/" + NON_EXIST_USER_ID).accept(UserResource.MEDIA_TYPE));
         ResultActions getResults = mockMvc.perform(get(location).accept(UserResource.MEDIA_TYPE));
         getResults.andExpect(status().isOk());
 
+    }
+
+    @Test
+    public void supportsUpdatingAnUser() throws Exception {
+        // GIVEN a valid userId
+        long userId = EXIST_USER_ID;
+
+        // WHEN update for userId is made
+        ResultActions result = updateUser(userId);
+
+        // THEN, success response is returned
+        result.andExpect(status().isOk());
+
+        // AND user is updated as expected
+        UserResource updatedResource =
+            objectMapper.readValue(getRequest(userId).andReturn().getResponse().getContentAsString(), UserResource.class);
+
+        assertEquals(FIRST_NAME_UPDATED, updatedResource.firstName);
+        assertEquals(LAST_NAME_UPDATED, updatedResource.lastName);
+    }
+
+    @Test
+    public void supportsDeletingAnUser() throws Exception {
+        // GIVEN a valid userId
+        long userId = EXIST_USER_ID;
+
+        // WHEN a delete request is made for that id
+        mockMvc.perform(delete(BASE_URI + userId)).andExpect(status().isOk());
     }
 
     private UserResource getValidUserResource() {
@@ -118,5 +155,21 @@ public class UserControllerTestH2 extends TestH2 {
         resource.setPassword(PASSWORD_CREATED);
 
         return resource;
+    }
+
+    private ResultActions getRequest(long id) throws Exception {
+        return mockMvc.perform(get(BASE_URI + id).accept(UserResource.MEDIA_TYPE));
+    }
+
+    private ResultActions updateUser(long id) throws Exception {
+        UserResource resource =
+            objectMapper.readValue(getRequest(id).andReturn().getResponse().getContentAsString(), UserResource.class);
+
+        resource.firstName = FIRST_NAME_UPDATED;
+        resource.lastName = LAST_NAME_UPDATED;
+
+        return mockMvc.perform(put(BASE_URI + id)
+            .content(objectMapper.writeValueAsString(resource))
+            .contentType(UserResource.MEDIA_TYPE));
     }
 }

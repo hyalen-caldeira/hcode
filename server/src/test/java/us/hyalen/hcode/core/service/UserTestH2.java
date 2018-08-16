@@ -53,6 +53,11 @@ public class UserTestH2 extends TestH2 {
         return "sql/user/v1/user_cleanup_h2.sql";
     }
 
+    // TODO, fetching all users
+    public void supportsFetchingAllUsers() {
+
+    }
+
     @Test
     public void when_AValidUserIdIsGiven_then_AValidUSerIsReturned() {
         User user = User.findById(EXIST_USER_ID).orElseThrow(NotFoundException::new);
@@ -99,7 +104,7 @@ public class UserTestH2 extends TestH2 {
         // WHEN update for a valid userId is made
         updateUser(userId);
 
-        // THEN, resource update as expected
+        // THEN, resource is updated as expected
         User savedUser = User.findById(userId).orElseThrow(NotFoundException::new);
         UserResource resource = UserMapper.INSTANCE.mapDomainToResource(savedUser);
 
