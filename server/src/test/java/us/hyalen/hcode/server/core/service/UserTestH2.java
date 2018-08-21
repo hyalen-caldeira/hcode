@@ -22,11 +22,12 @@ public class UserTestH2 extends TestH2 {
     private final String EXIST_FIRST_NAME = "Hyalen";
     private final String EXIST_LAST_NAME = "Moreira";
     private final String EXIST_EMAIL = "hyalen@gmail.com";
+    private final String EXIST_LOGIN = "hmoreira";
 
     private final String FIRST_NAME_CREATED = "Igor";
     private final String LAST_NAME_CREATED = "Caldeira";
     private final String EMAIL_CREATED = "igor@hotmail.com";
-    private final String LOGIN_CREATED = "igor@hotmail.com";
+    private final String LOGIN_CREATED = "icaldeira";
     private final String PASSWORD_CREATED = "123456";
 
     private final String FIRST_NAME_UPDATED = "Gabriela";
@@ -124,6 +125,16 @@ public class UserTestH2 extends TestH2 {
         // THEN, user is deleted as expected
         Optional<User> userDeleted = User.findById(userId);
         assertFalse(userDeleted.isPresent());
+    }
+
+    @Test
+    public void when_AValidEmailIsGiven_then_ExistsByEmailReturnsTrue() {
+        assertTrue(User.existsByEmail(EXIST_EMAIL));
+    }
+
+    @Test
+    public void when_AValidLoginIsGiven_then_ExistsByLoginReturnsTrue() {
+        assertTrue(User.existsByLogin(EXIST_LOGIN));
     }
 
     private UserResource getValidUserResource() {

@@ -1,9 +1,11 @@
 package us.hyalen.hcode.server.core.user.v1;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import us.hyalen.hcode.server.core.BaseDao;
 import us.hyalen.hcode.server.model.UserModel;
+import us.hyalen.hcode.server.repository.UserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,6 +14,9 @@ import java.util.Optional;
 @Component("userDao_v1")
 @Transactional
 public class UserDao extends BaseDao {
+    @Autowired
+    UserRepository repository;
+
     public Optional<User> findByUserId(Long userId) {
         UserModel model = getSessionFactory().getCurrentSession().get(UserModel.class, userId);
         User.Builder builder = (new User.Builder()).withUserModel(model);
@@ -33,5 +38,14 @@ public class UserDao extends BaseDao {
 
     public List<User> findAllUsers() {
         return null;
+    }
+
+    // --------- Repositories
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    public boolean existsByLogin(String login) {
+        return repository.existsByLogin(login);
     }
 }

@@ -52,6 +52,14 @@ public class User extends Domain {
         userDao.delete(mapper.mapDomainToModel(this));
     }
 
+    public static boolean existsByEmail(String email) {
+        return userDao.existsByEmail(email);
+    }
+
+    public static boolean existsByLogin(String login) {
+        return userDao.existsByLogin(login);
+    }
+
     public static class Builder {
         private User user;
 
