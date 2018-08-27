@@ -69,6 +69,20 @@ public class UserTestH2 extends TestH2 {
     }
 
     @Test
+    public void when_AValidLoginIsGiven_then_AValidUSerIsReturned() {
+        User user = User.findByLogin(EXIST_LOGIN).orElseThrow(NotFoundException::new);
+
+        assertEquals(user.getFirstName(), EXIST_FIRST_NAME);
+        assertEquals(user.getLastName(),EXIST_LAST_NAME);
+        assertEquals(user.getEmail(), EXIST_EMAIL);
+    }
+
+    @Test (expected = NotFoundException.class)
+    public void when_AnNonExistLoginIsGiven_then_NotFoundExceptionIsThrown() {
+        User.findById(NON_EXIST_USER_ID).orElseThrow(NotFoundException::new);
+    }
+
+    @Test
     public void when_AnInvalidUserIdIsGiven_then_NothingIsReturned() {
         Optional<User> user = User.findById(NON_EXIST_USER_ID);
         assertFalse(user.isPresent());
@@ -76,7 +90,7 @@ public class UserTestH2 extends TestH2 {
 
     @Test (expected = NotFoundException.class)
     public void when_AInvalidUserIdIsGiven_then_NotFoundExceptionIsThrown() {
-        User user = User.findById(NON_EXIST_USER_ID).orElseThrow(NotFoundException::new);
+        User.findById(NON_EXIST_USER_ID).orElseThrow(NotFoundException::new);
     }
 
     @Test

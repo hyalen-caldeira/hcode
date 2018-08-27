@@ -34,6 +34,10 @@ public class User extends Domain {
         return userDao.findByUserId(id);
     }
 
+    public static Optional<User> findByLogin(String login) {
+        return userDao.findByLogin(login);
+    }
+
     public static List<User> findAllUsers() {
         return userDao.findAllUsers();
     }

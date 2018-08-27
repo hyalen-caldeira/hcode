@@ -4,6 +4,7 @@ import org.junit.Test;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.ResultActions;
 
+import us.hyalen.hcode.server.core.ApiResponse;
 import us.hyalen.hcode.server.core.TestH2;
 import us.hyalen.hcode.client.core.user.v1.UserResource;
 
@@ -14,7 +15,7 @@ import static org.junit.Assert.*;
 // TODO, include test for a set of roles
 @ActiveProfiles("test")
 public class UserControllerTestH2 extends TestH2 {
-    private final String BASE_URI = "/users/";
+    private final String BASE_URI = "/api/users/";
 
     private final long EXIST_USER_ID = 1L;
     private final long NON_EXIST_USER_ID = 999L;
@@ -101,16 +102,21 @@ public class UserControllerTestH2 extends TestH2 {
                 .contentType(UserResource.MEDIA_TYPE));
 
         // THEN, success response is returned
-        postResult.andExpect(status().isOk());
+        postResult.andExpect(status().isCreated());
 
         // AND Location header has new resource URL
         String location = postResult.andReturn().getResponse().getHeader("Location");
         assertNotNull(location);
 
+        // AND the response that we get back is as expected
+        String json = postResult.andReturn().getResponse().getContentAsString();
+        ApiResponse response = objectMapper.readValue(json, ApiResponse.class);
+        assertTrue(response.getSuccess());
+        assertEquals(response.getMessage(), ApiResponse.CREATED);
+
         // AND new resource can be read using Location header
         ResultActions getResults = mockMvc.perform(get(location).accept(UserResource.MEDIA_TYPE));
         getResults.andExpect(status().isOk());
-
     }
 
     @Test

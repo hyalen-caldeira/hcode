@@ -41,6 +41,12 @@ public class UserDao extends BaseDao {
     }
 
     // --------- Repositories
+    public Optional<User> findByLogin(String login) {
+        Optional<UserModel> model = repository.findByLogin(login);
+
+        return Optional.ofNullable( new User.Builder().withUserModel(model.orElse(null)).build());
+    }
+
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
