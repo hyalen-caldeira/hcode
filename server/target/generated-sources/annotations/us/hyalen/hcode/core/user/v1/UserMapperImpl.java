@@ -29,7 +29,7 @@ public class UserMapperImpl implements UserMapper {
         user.setFirstName( model.getFirstName() );
         user.setLastName( model.getLastName() );
         user.setEmail( model.getEmail() );
-        user.setLogin( model.getLogin() );
+        user.setUsername( model.getUsername() );
         user.setPassword( model.getPassword() );
         if ( user.getRoles() != null ) {
             Set<RoleResource> set = roleModelSetToRoleResourceSet( model.getRoles() );
@@ -75,7 +75,7 @@ public class UserMapperImpl implements UserMapper {
         user.setFirstName( resource.getFirstName() );
         user.setLastName( resource.getLastName() );
         user.setEmail( resource.getEmail() );
-        user.setLogin( resource.getLogin() );
+        user.setUsername( resource.getUsername() );
         user.setPassword( resource.getPassword() );
         if ( user.getRoles() != null ) {
             List<RoleResource> list = resource.getRoles();
@@ -107,7 +107,7 @@ public class UserMapperImpl implements UserMapper {
         userModel.setFirstName( user.getFirstName() );
         userModel.setLastName( user.getLastName() );
         userModel.setEmail( user.getEmail() );
-        userModel.setLogin( user.getLogin() );
+        userModel.setUsername( user.getUsername() );
         userModel.setPassword( user.getPassword() );
         userModel.setRoles( roleResourceSetToRoleModelSet( user.getRoles() ) );
 
@@ -126,7 +126,7 @@ public class UserMapperImpl implements UserMapper {
         userResource.setFirstName( user.getFirstName() );
         userResource.setLastName( user.getLastName() );
         userResource.setEmail( user.getEmail() );
-        userResource.setLogin( user.getLogin() );
+        userResource.setUsername( user.getUsername() );
         userResource.setPassword( user.getPassword() );
         Set<RoleResource> set = user.getRoles();
         if ( set != null ) {

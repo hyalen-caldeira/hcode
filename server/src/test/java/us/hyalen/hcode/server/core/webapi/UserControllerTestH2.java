@@ -17,8 +17,8 @@ import static org.junit.Assert.*;
 public class UserControllerTestH2 extends TestH2 {
     private final String BASE_URI = "/api/users/";
 
-    private final long EXIST_USER_ID = 1L;
-    private final long NON_EXIST_USER_ID = 999L;
+    private final String EXIST_USERNAME = "hmoreira";
+    private final String NON_EXIST_USERNAME = "hfulano";
 
     private final String EXIST_FIRST_NAME = "Hyalen";
     private final String EXIST_LAST_NAME = "Moreira";
@@ -27,7 +27,7 @@ public class UserControllerTestH2 extends TestH2 {
     private final String FIRST_NAME_CREATED = "Igor";
     private final String LAST_NAME_CREATED = "Caldeira";
     private final String EMAIL_CREATED = "igor@hotmail.com";
-    private final String LOGIN_CREATED = "igor@hotmail.com";
+    private final String USERNAME_CREATED = "igor@hotmail.com";
     private final String PASSWORD_CREATED = "123456";
 
     private final String FIRST_NAME_UPDATED = "Gabriela";
@@ -49,22 +49,17 @@ public class UserControllerTestH2 extends TestH2 {
     }
 
     @Test
-    public void when_ANonExistUserIdIsGiven_then_ANotFoundStatusIsReturned() throws Exception {
-        getRequest(NON_EXIST_USER_ID).andExpect(status().isNotFound());
+    public void when_ANonExistUsernameIsGiven_then_ANotFoundStatusIsReturned() throws Exception {
+        getRequest(NON_EXIST_USERNAME).andExpect(status().isNotFound());
     }
 
     @Test
-    public void when_AValidUserIdIsGiven_then_AnOkStatusIsReturned() throws Exception {
-        getRequest(EXIST_USER_ID).andExpect(status().isOk());
-    }
-
-    @Test
-    public void when_AGetWithCorrectUserIdIsPerformed_then_AValidResourceIsReturned() throws Exception {
-        // GIVEN a valid userId
-        long userId = EXIST_USER_ID;
+    public void when_AGetWithCorrectUsernameIsPerformed_then_AValidResourceIsReturned() throws Exception {
+        // GIVEN a valid username
+        String username = EXIST_USERNAME;
 
         // WHEN a read request is made specifying a valid id parameter
-        ResultActions result = getRequest(userId);
+        ResultActions result = getRequest(username);
 
         // THEN, success response is returned
         result.andExpect(status().isOk());
@@ -80,12 +75,12 @@ public class UserControllerTestH2 extends TestH2 {
     }
 
     @Test
-    public void when_AGetWithANonExistUserIdIsPerformed_then_NotFoundIsReturned() throws Exception {
-        // GIVEN a non exist userId
-        long userId = NON_EXIST_USER_ID;
+    public void when_AGetWithANonExistUsernameIsPerformed_then_NotFoundIsReturned() throws Exception {
+        // GIVEN a non exist username
+        String username = NON_EXIST_USERNAME;
 
         // WHEN a read request is made specifying a non exist id parameter
-        ResultActions result = getRequest(userId);
+        ResultActions result = getRequest(username);
 
         // THEN, not found response is returned
         result.andExpect(status().isNotFound());
@@ -121,18 +116,18 @@ public class UserControllerTestH2 extends TestH2 {
 
     @Test
     public void supportsUpdatingAnUser() throws Exception {
-        // GIVEN a valid userId
-        long userId = EXIST_USER_ID;
+        // GIVEN a valid username
+        String username = EXIST_USERNAME;
 
-        // WHEN update for userId is made
-        ResultActions result = updateUser(userId);
+        // WHEN update for username is made
+        ResultActions result = updateUser(username);
 
         // THEN, success response is returned
         result.andExpect(status().isOk());
 
         // AND user is updated as expected
         UserResource updatedResource =
-            objectMapper.readValue(getRequest(userId).andReturn().getResponse().getContentAsString(), UserResource.class);
+            objectMapper.readValue(getRequest(username).andReturn().getResponse().getContentAsString(), UserResource.class);
 
         assertEquals(FIRST_NAME_UPDATED, updatedResource.firstName);
         assertEquals(LAST_NAME_UPDATED, updatedResource.lastName);
@@ -140,11 +135,11 @@ public class UserControllerTestH2 extends TestH2 {
 
     @Test
     public void supportsDeletingAnUser() throws Exception {
-        // GIVEN a valid userId
-        long userId = EXIST_USER_ID;
+        // GIVEN a valid username
+        String username = EXIST_USERNAME;
 
         // WHEN a delete request is made for that id
-        mockMvc.perform(delete(BASE_URI + userId)).andExpect(status().isOk());
+        mockMvc.perform(delete(BASE_URI + username)).andExpect(status().isOk());
     }
 
     private UserResource getValidUserResource() {
@@ -153,24 +148,24 @@ public class UserControllerTestH2 extends TestH2 {
         resource.setFirstName(FIRST_NAME_CREATED);
         resource.setLastName(LAST_NAME_CREATED);
         resource.setEmail(EMAIL_CREATED);
-        resource.setLogin(LOGIN_CREATED);
+        resource.setUsername(USERNAME_CREATED);
         resource.setPassword(PASSWORD_CREATED);
 
         return resource;
     }
 
-    private ResultActions getRequest(long id) throws Exception {
-        return mockMvc.perform(get(BASE_URI + id).accept(UserResource.MEDIA_TYPE));
+    private ResultActions getRequest(String username) throws Exception {
+        return mockMvc.perform(get(BASE_URI + username).accept(UserResource.MEDIA_TYPE));
     }
 
-    private ResultActions updateUser(long id) throws Exception {
+    private ResultActions updateUser(String username) throws Exception {
         UserResource resource =
-            objectMapper.readValue(getRequest(id).andReturn().getResponse().getContentAsString(), UserResource.class);
+            objectMapper.readValue(getRequest(username).andReturn().getResponse().getContentAsString(), UserResource.class);
 
         resource.firstName = FIRST_NAME_UPDATED;
         resource.lastName = LAST_NAME_UPDATED;
 
-        return mockMvc.perform(put(BASE_URI + id)
+        return mockMvc.perform(put(BASE_URI + username)
             .content(objectMapper.writeValueAsString(resource))
             .contentType(UserResource.MEDIA_TYPE));
     }

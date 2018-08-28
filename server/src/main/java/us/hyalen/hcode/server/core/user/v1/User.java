@@ -24,7 +24,7 @@ public class User extends Domain {
     private String firstName;
     private String lastName;
     private String email;
-    private String login;
+    private String username;
     private String password;
     private Set<RoleResource> roles;
 
@@ -34,8 +34,8 @@ public class User extends Domain {
         return userDao.findByUserId(id);
     }
 
-    public static Optional<User> findByLogin(String login) {
-        return userDao.findByLogin(login);
+    public static Optional<User> findByUsername(String username) {
+        return userDao.findByUsername(username);
     }
 
     public static List<User> findAllUsers() {
@@ -60,8 +60,8 @@ public class User extends Domain {
         return userDao.existsByEmail(email);
     }
 
-    public static boolean existsByLogin(String login) {
-        return userDao.existsByLogin(login);
+    public static boolean existsByUsername(String username) {
+        return userDao.existsByUsername(username);
     }
 
     public static class Builder {
@@ -108,8 +108,8 @@ public class User extends Domain {
             return this;
         }
 
-        public Builder withLogin(String login) {
-            user.login = login;
+        public Builder withUsername(String username) {
+            user.username = username;
             return this;
         }
 

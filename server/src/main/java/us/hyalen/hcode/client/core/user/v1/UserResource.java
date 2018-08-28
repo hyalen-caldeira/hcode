@@ -23,7 +23,7 @@ public class UserResource {
     public String email;
     @NotNull
     @Size(max = 40)
-    public String login;
+    public String username;
     @NotNull
     @Size(max = 20)
     public String password;

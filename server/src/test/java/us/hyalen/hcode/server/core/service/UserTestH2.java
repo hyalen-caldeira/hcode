@@ -22,12 +22,12 @@ public class UserTestH2 extends TestH2 {
     private final String EXIST_FIRST_NAME = "Hyalen";
     private final String EXIST_LAST_NAME = "Moreira";
     private final String EXIST_EMAIL = "hyalen@gmail.com";
-    private final String EXIST_LOGIN = "hmoreira";
+    private final String EXIST_USERNAME = "hmoreira";
 
     private final String FIRST_NAME_CREATED = "Igor";
     private final String LAST_NAME_CREATED = "Caldeira";
     private final String EMAIL_CREATED = "igor@hotmail.com";
-    private final String LOGIN_CREATED = "icaldeira";
+    private final String USERNAME_CREATED = "icaldeira";
     private final String PASSWORD_CREATED = "123456";
 
     private final String FIRST_NAME_UPDATED = "Gabriela";
@@ -69,8 +69,8 @@ public class UserTestH2 extends TestH2 {
     }
 
     @Test
-    public void when_AValidLoginIsGiven_then_AValidUSerIsReturned() {
-        User user = User.findByLogin(EXIST_LOGIN).orElseThrow(NotFoundException::new);
+    public void when_AValidUsernameIsGiven_then_AValidUSerIsReturned() {
+        User user = User.findByUsername(EXIST_USERNAME).orElseThrow(NotFoundException::new);
 
         assertEquals(user.getFirstName(), EXIST_FIRST_NAME);
         assertEquals(user.getLastName(),EXIST_LAST_NAME);
@@ -78,7 +78,7 @@ public class UserTestH2 extends TestH2 {
     }
 
     @Test (expected = NotFoundException.class)
-    public void when_AnNonExistLoginIsGiven_then_NotFoundExceptionIsThrown() {
+    public void when_AnNonExistUsernameIsGiven_then_NotFoundExceptionIsThrown() {
         User.findById(NON_EXIST_USER_ID).orElseThrow(NotFoundException::new);
     }
 
@@ -107,7 +107,7 @@ public class UserTestH2 extends TestH2 {
         assertEquals(user.getFirstName(), FIRST_NAME_CREATED);
         assertEquals(user.getLastName(), LAST_NAME_CREATED);
         assertEquals(user.getEmail(), EMAIL_CREATED);
-        assertEquals(user.getLogin(), LOGIN_CREATED);
+        assertEquals(user.getUsername(), USERNAME_CREATED);
         assertEquals(user.getPassword(), PASSWORD_CREATED);
     }
 
@@ -147,8 +147,8 @@ public class UserTestH2 extends TestH2 {
     }
 
     @Test
-    public void when_AValidLoginIsGiven_then_ExistsByLoginReturnsTrue() {
-        assertTrue(User.existsByLogin(EXIST_LOGIN));
+    public void when_AValidUsernameIsGiven_then_ExistsByUsernameReturnsTrue() {
+        assertTrue(User.existsByUsername(EXIST_USERNAME));
     }
 
     private UserResource getValidUserResource() {
@@ -157,7 +157,7 @@ public class UserTestH2 extends TestH2 {
         resource.setFirstName(FIRST_NAME_CREATED);
         resource.setLastName(LAST_NAME_CREATED);
         resource.setEmail(EMAIL_CREATED);
-        resource.setLogin(LOGIN_CREATED);
+        resource.setUsername(USERNAME_CREATED);
         resource.setPassword(PASSWORD_CREATED);
 
         return resource;

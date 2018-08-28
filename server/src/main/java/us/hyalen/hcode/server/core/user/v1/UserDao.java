@@ -41,17 +41,17 @@ public class UserDao extends BaseDao {
     }
 
     // --------- Repositories
-    public Optional<User> findByLogin(String login) {
-        Optional<UserModel> model = repository.findByLogin(login);
-
-        return Optional.ofNullable( new User.Builder().withUserModel(model.orElse(null)).build());
+    public Optional<User> findByUsername(String username) {
+        Optional<UserModel> model = repository.findByUsername(username);
+        User.Builder builder = (new User.Builder()).withUserModel(model.orElse(null));
+        return Optional.ofNullable(builder == null ? null : builder.build());
     }
 
     public boolean existsByEmail(String email) {
         return repository.existsByEmail(email);
     }
 
-    public boolean existsByLogin(String login) {
-        return repository.existsByLogin(login);
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
     }
 }

@@ -16,7 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "USER",
     uniqueConstraints = {
-        @UniqueConstraint(columnNames = {"LOGIN"}),
+        @UniqueConstraint(columnNames = {"USERNAME"}),
         @UniqueConstraint(columnNames = {"EMAIL"})},
     schema = "HCODEDB")
 @Setter
@@ -47,8 +47,8 @@ public class UserModel extends DateAudit {
 
     @NotBlank
     @Size(max = 40)
-    @Column(name = "LOGIN")
-    private String login;
+    @Column(name = "USERNAME")
+    private String username;
 
     @NotBlank
     @Size(max = 20)
