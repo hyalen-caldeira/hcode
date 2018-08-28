@@ -11,9 +11,11 @@ import us.hyalen.hcode.client.core.user.v1.UserResource;
 import java.util.Optional;
 
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
 
 // TODO, Constraint Violation Exception
 // TODO, include roles
+// TODO, test collection
 @ActiveProfiles("test")
 public class UserTestH2 extends TestH2 {
     private final Long EXIST_USER_ID = 1L;
@@ -63,18 +65,18 @@ public class UserTestH2 extends TestH2 {
     public void when_AValidUserIdIsGiven_then_AValidUSerIsReturned() {
         User user = User.findById(EXIST_USER_ID).orElseThrow(NotFoundException::new);
 
-        assertEquals(user.getFirstName(), EXIST_FIRST_NAME);
-        assertEquals(user.getLastName(),EXIST_LAST_NAME);
-        assertEquals(user.getEmail(), EXIST_EMAIL);
+        assertThat(user.getFirstName(), is(equalTo(EXIST_FIRST_NAME)));
+        assertThat(user.getLastName(), is(equalTo(EXIST_LAST_NAME)));
+        assertThat(user.getEmail(), is(equalTo(EXIST_EMAIL)));
     }
 
     @Test
     public void when_AValidUsernameIsGiven_then_AValidUSerIsReturned() {
         User user = User.findByUsername(EXIST_USERNAME).orElseThrow(NotFoundException::new);
 
-        assertEquals(user.getFirstName(), EXIST_FIRST_NAME);
-        assertEquals(user.getLastName(),EXIST_LAST_NAME);
-        assertEquals(user.getEmail(), EXIST_EMAIL);
+        assertThat(user.getFirstName(), is(equalTo(EXIST_FIRST_NAME)));
+        assertThat(user.getLastName(), is(equalTo(EXIST_LAST_NAME)));
+        assertThat(user.getEmail(), is(equalTo(EXIST_EMAIL)));
     }
 
     @Test (expected = NotFoundException.class)
@@ -85,7 +87,8 @@ public class UserTestH2 extends TestH2 {
     @Test
     public void when_AnInvalidUserIdIsGiven_then_NothingIsReturned() {
         Optional<User> user = User.findById(NON_EXIST_USER_ID);
-        assertFalse(user.isPresent());
+
+        assertThat(user.isPresent(), is(false));
     }
 
     @Test (expected = NotFoundException.class)
@@ -103,12 +106,14 @@ public class UserTestH2 extends TestH2 {
         user = user.create();
 
         // THEN, User has a correct data and userId generated;
-        assertNotNull(user.getId());
-        assertEquals(user.getFirstName(), FIRST_NAME_CREATED);
-        assertEquals(user.getLastName(), LAST_NAME_CREATED);
-        assertEquals(user.getEmail(), EMAIL_CREATED);
-        assertEquals(user.getUsername(), USERNAME_CREATED);
-        assertEquals(user.getPassword(), PASSWORD_CREATED);
+
+        assertThat(user.getId(), is(notNullValue()));
+
+        assertThat(user.getFirstName(), is(equalTo(FIRST_NAME_CREATED)));
+        assertThat(user.getLastName(), is(equalTo(LAST_NAME_CREATED)));
+        assertThat(user.getEmail(), is(equalTo(EMAIL_CREATED)));
+        assertThat(user.getUsername(), is(equalTo(USERNAME_CREATED)));
+        assertThat(user.getPassword(), is(equalTo(PASSWORD_CREATED)));
     }
 
     @Test
@@ -123,8 +128,8 @@ public class UserTestH2 extends TestH2 {
         User savedUser = User.findById(userId).orElseThrow(NotFoundException::new);
         UserResource resource = UserMapper.INSTANCE.mapDomainToResource(savedUser);
 
-        assertEquals(FIRST_NAME_UPDATED, resource.firstName);
-        assertEquals(LAST_NAME_UPDATED, resource.lastName);
+        assertThat(resource.firstName, is(equalTo(FIRST_NAME_UPDATED)));
+        assertThat(resource.lastName, is(equalTo(LAST_NAME_UPDATED)));
     }
 
     @Test
@@ -138,7 +143,8 @@ public class UserTestH2 extends TestH2 {
 
         // THEN, user is deleted as expected
         Optional<User> userDeleted = User.findById(userId);
-        assertFalse(userDeleted.isPresent());
+
+        assertThat(userDeleted.isPresent(), is(false));
     }
 
     @Test

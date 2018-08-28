@@ -11,8 +11,11 @@ import us.hyalen.hcode.client.core.user.v1.UserResource;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.Assert.*;
+import static org.hamcrest.CoreMatchers.*;
+
 
 // TODO, include test for a set of roles
+// TODO, test collection
 @ActiveProfiles("test")
 public class UserControllerTestH2 extends TestH2 {
     private final String BASE_URI = "/api/users/";
@@ -69,9 +72,9 @@ public class UserControllerTestH2 extends TestH2 {
 
         UserResource resource = objectMapper.readValue(json, UserResource.class);
 
-        assertEquals(resource.getFirstName(), EXIST_FIRST_NAME);
-        assertEquals(resource.getLastName(), EXIST_LAST_NAME);
-        assertEquals(resource.getEmail(), EXIST_EMAIL);
+        assertThat(resource.getFirstName(), is(equalTo(EXIST_FIRST_NAME)));
+        assertThat(resource.getLastName(), is(equalTo(EXIST_LAST_NAME)));
+        assertThat(resource.getEmail(), is(equalTo(EXIST_EMAIL)));
     }
 
     @Test
@@ -101,13 +104,13 @@ public class UserControllerTestH2 extends TestH2 {
 
         // AND Location header has new resource URL
         String location = postResult.andReturn().getResponse().getHeader("Location");
-        assertNotNull(location);
+        assertThat(location, notNullValue());
 
         // AND the response that we get back is as expected
         String json = postResult.andReturn().getResponse().getContentAsString();
         ApiResponse response = objectMapper.readValue(json, ApiResponse.class);
-        assertTrue(response.getSuccess());
-        assertEquals(response.getMessage(), ApiResponse.CREATED);
+        assertThat(response.getSuccess(), is(true));
+        assertThat(response.getMessage(), is(equalTo(ApiResponse.CREATED)));
 
         // AND new resource can be read using Location header
         ResultActions getResults = mockMvc.perform(get(location).accept(UserResource.MEDIA_TYPE));
@@ -129,8 +132,8 @@ public class UserControllerTestH2 extends TestH2 {
         UserResource updatedResource =
             objectMapper.readValue(getRequest(username).andReturn().getResponse().getContentAsString(), UserResource.class);
 
-        assertEquals(FIRST_NAME_UPDATED, updatedResource.firstName);
-        assertEquals(LAST_NAME_UPDATED, updatedResource.lastName);
+        assertThat(updatedResource.firstName, is(equalTo(FIRST_NAME_UPDATED)));
+        assertThat(updatedResource.lastName, is(equalTo(LAST_NAME_UPDATED)));
     }
 
     @Test
