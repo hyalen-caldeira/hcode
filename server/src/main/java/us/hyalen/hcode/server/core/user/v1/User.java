@@ -30,12 +30,24 @@ public class User extends Domain {
 
     private User() {}
 
+    public static boolean existsByEmail(String email) {
+        return userDao.existsByEmail(email);
+    }
+
+    public static boolean existsByUsername(String username) {
+        return userDao.existsByUsername(username);
+    }
+
     public static Optional<User> findById(Long id) {
         return userDao.findByUserId(id);
     }
 
     public static Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
+    }
+
+    public static Optional<User> findByUsernameOrEmail(String username, String email) {
+        return userDao.findByUsernameOrEmail(username, email);
     }
 
     public static List<User> findAllUsers() {
@@ -54,14 +66,6 @@ public class User extends Domain {
 
     public void delete() {
         userDao.delete(mapper.mapDomainToModel(this));
-    }
-
-    public static boolean existsByEmail(String email) {
-        return userDao.existsByEmail(email);
-    }
-
-    public static boolean existsByUsername(String username) {
-        return userDao.existsByUsername(username);
     }
 
     public static class Builder {
