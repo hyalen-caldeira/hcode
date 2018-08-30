@@ -8,6 +8,7 @@ import us.hyalen.hcode.client.core.user.v1.UserResource;
 import us.hyalen.hcode.client.core.role.v1.RoleResource;
 import us.hyalen.hcode.server.model.RoleModel;
 import us.hyalen.hcode.server.model.UserModel;
+import us.hyalen.hcode.server.security.UserPrincipal;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
@@ -47,4 +48,8 @@ public interface UserMapper {
 
     // ====================== Domain to Resource
     UserResource mapDomainToResource(User user);
+
+    // ====================== Domain to UserPrincipal
+    @Mapping(target = "authorities", ignore = true)
+    void mapDomainToUserPrincipal(User user, @MappingTarget UserPrincipal userPrincipal);
 }

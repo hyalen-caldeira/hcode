@@ -4,54 +4,26 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import us.hyalen.hcode.server.core.user.v1.User;
+import us.hyalen.hcode.server.core.user.v1.UserMapper;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @EqualsAndHashCode
 public class UserPrincipal implements UserDetails {
     private Long id;
-
-    private String name;
-
+    private String firstName;
+    private String lastName;
     private String username;
-
     @JsonIgnore
     private String email;
-
     @JsonIgnore
     private String password;
-
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserPrincipal(Long id, String name, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.id = id;
-        this.name = name;
-        this.username = username;
-        this.email = email;
-        this.password = password;
-        this.authorities = authorities;
-    }
-
-    public static UserPrincipal create(User user) {
-        List<GrantedAuthority> authorities = user.getRoles().stream().map(role ->
-                new SimpleGrantedAuthority(role.getName())
-        ).collect(Collectors.toList());
-
-        return new UserPrincipal(
-                user.getId(),
-                user.getFirstName(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword(),
-                authorities
-        );
-    }
+    private UserPrincipal() {}
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,5 +48,61 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public static class Builder {
+        private UserPrincipal userPrincipal;
+
+        public Builder() {
+            this.userPrincipal = new UserPrincipal();
+        }
+
+        public Builder(UserPrincipal userPrincipal) {
+            this.userPrincipal = userPrincipal;
+        }
+
+        public Builder withUser(User user) {
+            UserMapper.INSTANCE.mapDomainToUserPrincipal(user, userPrincipal);
+            return this;
+        }
+
+        public Builder withId(Long id) {
+            userPrincipal.id = id;
+            return this;
+        }
+
+        public Builder withFirstName(String firstName) {
+            userPrincipal.firstName = firstName;
+            return this;
+        }
+
+        public Builder withLastName(String lastName) {
+            userPrincipal.lastName = lastName;
+            return this;
+        }
+
+        public Builder withEmail(String email) {
+            userPrincipal.email = email;
+            return this;
+        }
+
+        public Builder withUsername(String username) {
+            userPrincipal.username = username;
+            return this;
+        }
+
+        public Builder withPassword(String password) {
+            userPrincipal.password = password;
+            return this;
+        }
+
+        public Builder withAuthorities(Collection<? extends GrantedAuthority> authorities) {
+            userPrincipal.authorities = authorities;
+            return this;
+        }
+
+        public UserPrincipal build() {
+            return userPrincipal;
+        }
     }
 }
