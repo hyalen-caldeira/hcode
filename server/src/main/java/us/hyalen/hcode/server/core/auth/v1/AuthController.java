@@ -17,23 +17,23 @@ import us.hyalen.hcode.client.core.auth.v1.AuthResource;
 import us.hyalen.hcode.client.core.auth.v1.JwtAuthenticationResource;
 import us.hyalen.hcode.client.core.user.v1.UserResource;
 import us.hyalen.hcode.server.core.ApiResponse;
+import us.hyalen.hcode.server.core.NotFoundException;
+import us.hyalen.hcode.server.core.role.v1.Role;
+import us.hyalen.hcode.server.core.user.v1.User;
+import us.hyalen.hcode.server.model.RoleName;
 import us.hyalen.hcode.server.security.JwtTokenProvider;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.Collections;
+
+import static org.springframework.http.ResponseEntity.created;
 
 @RestController("authController_v1")
 @RequestMapping(value = "/api/auth", produces = AuthResource.MEDIA_TYPE)
 public class AuthController {
-    /*
     @Autowired
     AuthenticationManager authenticationManager;
-
-    @Autowired
-    UserRepository userRepository;
-
-    @Autowired
-    RoleRepository roleRepository;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -59,34 +59,29 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserResource userResource) {
-        if(userRepository.existsByUsername(userResource.getUsername())) {
+        if (User.existsByUsername(userResource.username)) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
         }
 
-        if(userRepository.existsByEmail(userResource.getEmail())) {
+        if (User.existsByEmail(userResource.email)) {
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
         }
 
         // Creating user's account
-        User user = new User(userResource.getName(), signUpRequest.getUsername(),
-                signUpRequest.getEmail(), signUpRequest.getPassword());
+        Role role = Role.findByName(RoleName.ROLE_USER)
+                .orElseThrow(() -> new NotFoundException("User Role not set."));
 
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userResource.password = passwordEncoder.encode(userResource.password);
+        User user = new User.Builder().withUserResource(userResource).build();//.withRoles(Collections.singleton(role)).build();
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
-
-        user.setRoles(Collections.singleton(userRole));
-
-        User result = userRepository.save(user);
+        user.create();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
-                .buildAndExpand(result.getUsername()).toUri();
+                .buildAndExpand(user.getUsername()).toUri();
 
-        return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
+        return created(location).body(new ApiResponse(true, ApiResponse.CREATED));
     }
-    */
 }

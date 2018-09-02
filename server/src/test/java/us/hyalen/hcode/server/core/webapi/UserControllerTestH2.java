@@ -72,9 +72,9 @@ public class UserControllerTestH2 extends TestH2 {
 
         UserResource resource = objectMapper.readValue(json, UserResource.class);
 
-        assertThat(resource.getFirstName(), is(equalTo(EXIST_FIRST_NAME)));
-        assertThat(resource.getLastName(), is(equalTo(EXIST_LAST_NAME)));
-        assertThat(resource.getEmail(), is(equalTo(EXIST_EMAIL)));
+        assertThat(resource.firstName, is(equalTo(EXIST_FIRST_NAME)));
+        assertThat(resource.lastName, is(equalTo(EXIST_LAST_NAME)));
+        assertThat(resource.email, is(equalTo(EXIST_EMAIL)));
     }
 
     @Test
@@ -148,11 +148,11 @@ public class UserControllerTestH2 extends TestH2 {
     private UserResource getValidUserResource() {
         UserResource resource = new UserResource();
 
-        resource.setFirstName(FIRST_NAME_CREATED);
-        resource.setLastName(LAST_NAME_CREATED);
-        resource.setEmail(EMAIL_CREATED);
-        resource.setUsername(USERNAME_CREATED);
-        resource.setPassword(PASSWORD_CREATED);
+        resource.firstName = FIRST_NAME_CREATED;
+        resource.lastName = LAST_NAME_CREATED;
+        resource.email = EMAIL_CREATED;
+        resource.username = USERNAME_CREATED;
+        resource.password = PASSWORD_CREATED;
 
         return resource;
     }

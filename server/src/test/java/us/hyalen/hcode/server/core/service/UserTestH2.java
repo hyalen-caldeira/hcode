@@ -106,9 +106,7 @@ public class UserTestH2 extends TestH2 {
         user = user.create();
 
         // THEN, User has a correct data and userId generated;
-
         assertThat(user.getId(), is(notNullValue()));
-
         assertThat(user.getFirstName(), is(equalTo(FIRST_NAME_CREATED)));
         assertThat(user.getLastName(), is(equalTo(LAST_NAME_CREATED)));
         assertThat(user.getEmail(), is(equalTo(EMAIL_CREATED)));
@@ -160,11 +158,11 @@ public class UserTestH2 extends TestH2 {
     private UserResource getValidUserResource() {
         UserResource resource = new UserResource();
 
-        resource.setFirstName(FIRST_NAME_CREATED);
-        resource.setLastName(LAST_NAME_CREATED);
-        resource.setEmail(EMAIL_CREATED);
-        resource.setUsername(USERNAME_CREATED);
-        resource.setPassword(PASSWORD_CREATED);
+        resource.firstName = FIRST_NAME_CREATED;
+        resource.lastName = LAST_NAME_CREATED;
+        resource.email = EMAIL_CREATED;
+        resource.username = USERNAME_CREATED;
+        resource.password = PASSWORD_CREATED;
 
         return resource;
     }
@@ -172,8 +170,7 @@ public class UserTestH2 extends TestH2 {
     private void updateUser(Long id) {
         User user = User.findById(id).orElseThrow(NotFoundException::new);
 
-        user.setFirstName(FIRST_NAME_UPDATED);
-        user.setLastName(LAST_NAME_UPDATED);
+        user = new User.Builder(user).withFirstName(FIRST_NAME_UPDATED).withLastName(LAST_NAME_UPDATED).build();
 
         user.update();
     }

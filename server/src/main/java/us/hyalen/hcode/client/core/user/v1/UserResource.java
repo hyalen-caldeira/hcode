@@ -1,6 +1,7 @@
 package us.hyalen.hcode.client.core.user.v1;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import us.hyalen.hcode.client.core.role.v1.RoleResource;
 
 import javax.validation.constraints.Email;
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-@Data
+@EqualsAndHashCode
 public class UserResource {
     public static final String MEDIA_TYPE = "application/vnd.hcode.users.v1+json";
 

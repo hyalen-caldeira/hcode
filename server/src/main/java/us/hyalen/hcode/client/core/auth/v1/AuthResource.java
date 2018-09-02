@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @Setter
 public class AuthResource {
-    public static final String MEDIA_TYPE = "application/vnd.hcode.login.v1+json";
+    public static final String MEDIA_TYPE = "application/vnd.hcode.auth.v1+json";
 
     @NotBlank
     private String usernameOrEmail;
