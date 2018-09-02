@@ -5,6 +5,7 @@ import lombok.Setter;
 import us.hyalen.hcode.client.core.user.v1.UserResource;
 import us.hyalen.hcode.server.core.Domain;
 import us.hyalen.hcode.client.core.role.v1.RoleResource;
+import us.hyalen.hcode.server.core.role.v1.Role;
 import us.hyalen.hcode.server.model.RoleModel;
 import us.hyalen.hcode.server.model.UserModel;
 
@@ -14,7 +15,6 @@ import java.util.Optional;
 import java.util.Set;
 
 @Getter
-@Setter
 public class User extends Domain {
     @Setter
     private static UserDao userDao;
@@ -26,9 +26,17 @@ public class User extends Domain {
     private String email;
     private String username;
     private String password;
-    private Set<RoleResource> roles;
+    private Set<Role> roles;
 
     private User() {}
+
+    public static boolean existsByEmail(String email) {
+        return userDao.existsByEmail(email);
+    }
+
+    public static boolean existsByUsername(String username) {
+        return userDao.existsByUsername(username);
+    }
 
     public static Optional<User> findById(Long id) {
         return userDao.findByUserId(id);
@@ -36,6 +44,10 @@ public class User extends Domain {
 
     public static Optional<User> findByUsername(String username) {
         return userDao.findByUsername(username);
+    }
+
+    public static Optional<User> findByUsernameOrEmail(String username, String email) {
+        return userDao.findByUsernameOrEmail(username, email);
     }
 
     public static List<User> findAllUsers() {
@@ -56,14 +68,6 @@ public class User extends Domain {
         userDao.delete(mapper.mapDomainToModel(this));
     }
 
-    public static boolean existsByEmail(String email) {
-        return userDao.existsByEmail(email);
-    }
-
-    public static boolean existsByUsername(String username) {
-        return userDao.existsByUsername(username);
-    }
-
     public static class Builder {
         private User user;
 
@@ -76,16 +80,18 @@ public class User extends Domain {
         }
 
         public Builder withUserResource(UserResource resource) {
-            mapper.mapResourceToDomain(resource, user);
-            return this;
+            return mapper.mapResourceToDomain(resource);
+            // mapper.mapResourceToDomain(resource, user);
+            // return this;
         }
 
         public Builder withUserModel(UserModel model) {
             if (model == null)
                 return null;
 
-            mapper.mapModelToDomain(model, user);
-            return this;
+            return mapper.toDomainBuilder(model);
+            // mapper.mapModelToDomain(model, user);
+            // return this;
         }
 
         public Builder withId(Long id) {
@@ -119,7 +125,7 @@ public class User extends Domain {
         }
 
         public Builder withRoles(Set<RoleModel> models) {
-            if (models.size() > 0) {
+            if (models != null && models.size() > 0) {
                 user.roles = new HashSet<>();
 
                 models.forEach (model -> {
@@ -129,6 +135,18 @@ public class User extends Domain {
 
             return this;
         }
+
+//        public Builder withRoles(Set<RoleResource> resources) {
+//            if (resources != null && resources.size() > 0) {
+//                user.roles = new HashSet<>();
+//
+//                resources.forEach (resource -> {
+//                    user.roles.add(mapper.toRole(resource));
+//                });
+//            }
+//
+//            return this;
+//        }
 
         public User build() {
             return user;

@@ -17,9 +17,29 @@ public class UserDao extends BaseDao {
     @Autowired
     UserRepository repository;
 
+    public boolean existsByEmail(String email) {
+        return repository.existsByEmail(email);
+    }
+
+    public boolean existsByUsername(String username) {
+        return repository.existsByUsername(username);
+    }
+
     public Optional<User> findByUserId(Long userId) {
         UserModel model = getSessionFactory().getCurrentSession().get(UserModel.class, userId);
         User.Builder builder = (new User.Builder()).withUserModel(model);
+        return Optional.ofNullable(builder == null ? null : builder.build());
+    }
+
+    public Optional<User> findByUsername(String username) {
+        Optional<UserModel> model = repository.findByUsername(username);
+        User.Builder builder = (new User.Builder()).withUserModel(model.orElse(null));
+        return Optional.ofNullable(builder == null ? null : builder.build());
+    }
+
+    public Optional<User> findByUsernameOrEmail(String username, String email) {
+        Optional<UserModel> model = repository.findByUsernameOrEmail(username, email);
+        User.Builder builder = (new User.Builder()).withUserModel(model.orElse(null));
         return Optional.ofNullable(builder == null ? null : builder.build());
     }
 
@@ -38,20 +58,5 @@ public class UserDao extends BaseDao {
 
     public List<User> findAllUsers() {
         return null;
-    }
-
-    // --------- Repositories
-    public Optional<User> findByUsername(String username) {
-        Optional<UserModel> model = repository.findByUsername(username);
-        User.Builder builder = (new User.Builder()).withUserModel(model.orElse(null));
-        return Optional.ofNullable(builder == null ? null : builder.build());
-    }
-
-    public boolean existsByEmail(String email) {
-        return repository.existsByEmail(email);
-    }
-
-    public boolean existsByUsername(String username) {
-        return repository.existsByUsername(username);
     }
 }
