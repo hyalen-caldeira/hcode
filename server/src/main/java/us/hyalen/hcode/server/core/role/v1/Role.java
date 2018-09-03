@@ -13,10 +13,12 @@ import java.util.Optional;
 public class Role extends Domain {
     @Setter
     private static RoleDao roleDao;
+    private static RoleMapper mapper = RoleMapper.INSTANCE;
 
     private Long id;
-    private String name;
+    private RoleName name;
 
+    // TODO, make constructor private
     // private Role() {}
 
     public static Optional<Role> findByName(RoleName roleName) {
@@ -35,10 +37,23 @@ public class Role extends Domain {
         }
 
         public Builder withRoleResource(RoleResource resource) {
-            return this;
+            return mapper.mapResourceToDomain(resource);
         }
 
         public Builder withRoleModel(RoleModel model) {
+            if (model == null)
+                return null;
+
+            return mapper.toDomainBuilder(model);
+        }
+
+        public Builder withId(Long id) {
+            role.id = id;
+            return this;
+        }
+
+        public Builder withName(RoleName name) {
+            role.name = name;
             return this;
         }
 

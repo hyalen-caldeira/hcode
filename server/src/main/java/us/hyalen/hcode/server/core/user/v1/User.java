@@ -124,29 +124,22 @@ public class User extends Domain {
             return this;
         }
 
-        public Builder withRoles(Set<RoleModel> models) {
-            if (models != null && models.size() > 0) {
-                user.roles = new HashSet<>();
-
-                models.forEach (model -> {
-                    user.roles.add(mapper.toRole(model));
-                });
-            }
-
-            return this;
-        }
-
-//        public Builder withRoles(Set<RoleResource> resources) {
-//            if (resources != null && resources.size() > 0) {
+//        public Builder withRoles(Set<RoleModel> models) {
+//            if (models != null && models.size() > 0) {
 //                user.roles = new HashSet<>();
 //
-//                resources.forEach (resource -> {
-//                    user.roles.add(mapper.toRole(resource));
+//                models.forEach (model -> {
+//                    user.roles.add(mapper.toRole(model));
 //                });
 //            }
 //
 //            return this;
 //        }
+
+        public Builder withRoles(Set<Role> roles) {
+            user.roles = roles;
+            return this;
+        }
 
         public User build() {
             return user;

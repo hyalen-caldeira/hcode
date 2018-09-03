@@ -18,7 +18,7 @@ public class RoleDao extends BaseDao {
 
     public Optional<Role> findByName(RoleName roleName) {
         Optional<RoleModel> model = repository.findByName(roleName);
-        Role.Builder builder = (new Role.Builder()).withRoleModel(model.orElse(null));
+        Role.Builder builder = (new Role.Builder()).withRoleModel(model.isPresent() ? model.get() : null);
         return Optional.ofNullable(builder == null ? null : builder.build());
     }
 }

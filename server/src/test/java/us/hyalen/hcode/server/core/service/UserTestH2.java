@@ -87,7 +87,6 @@ public class UserTestH2 extends TestH2 {
     @Test
     public void when_AnInvalidUserIdIsGiven_then_NothingIsReturned() {
         Optional<User> user = User.findById(NON_EXIST_USER_ID);
-
         assertThat(user.isPresent(), is(false));
     }
 
