@@ -10,7 +10,9 @@ import javax.annotation.PostConstruct;
 import java.util.TimeZone;
 
 @EntityScan(basePackageClasses = {Application.class, Jsr310JpaConverters.class})
-@SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class})
+// TODO, consider to uncomment this line in case of not using Spring DATA JPA
+// @SpringBootApplication(exclude = {HibernateJpaAutoConfiguration.class})
+@SpringBootApplication
 public class Application {
 	@PostConstruct
 	void init() {

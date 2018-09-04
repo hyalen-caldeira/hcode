@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import us.hyalen.hcode.server.core.BaseDao;
+import us.hyalen.hcode.server.core.NotFoundException;
 import us.hyalen.hcode.server.model.UserModel;
 import us.hyalen.hcode.server.repository.UserRepository;
 
@@ -26,7 +27,8 @@ public class UserDao extends BaseDao {
     }
 
     public Optional<User> findByUserId(Long userId) {
-        UserModel model = getSessionFactory().getCurrentSession().get(UserModel.class, userId);
+        // UserModel model = getSessionFactory().getCurrentSession().get(UserModel.class, userId);
+        UserModel model = repository.findById(userId).orElseThrow(NotFoundException::new);
         User.Builder builder = (new User.Builder()).withUserModel(model);
         return Optional.ofNullable(builder == null ? null : builder.build());
     }
@@ -44,16 +46,19 @@ public class UserDao extends BaseDao {
     }
 
     public User create(UserModel model) {
-        getSessionFactory().getCurrentSession().save(model);
+        // getSessionFactory().getCurrentSession().save(model);
+        repository.save(model);
         return new User.Builder().withUserModel(model).build();
     }
 
     public void update(UserModel model) {
-        getSessionFactory().getCurrentSession().merge(model);
+        // getSessionFactory().getCurrentSession().merge(model);
+        repository.save(model);
     }
 
     public void delete(UserModel model) {
-        getSessionFactory().getCurrentSession().delete(model);
+        // getSessionFactory().getCurrentSession().delete(model);
+        repository.delete(model);
     }
 
     public List<User> findAllUsers() {

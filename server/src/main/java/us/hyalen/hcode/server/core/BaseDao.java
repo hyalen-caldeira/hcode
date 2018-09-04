@@ -14,6 +14,8 @@ import java.util.Set;
 
 @NoArgsConstructor
 public abstract class BaseDao {
+    // TODO, consider to remove this line in case of not using Spring DATA JPA
+    /*
     @Autowired
     @Qualifier("hcodeSessionFactory")
     @Getter
@@ -42,4 +44,5 @@ public abstract class BaseDao {
         elementsToMerge.removeAll(elementsToCreate);
         elementsToMerge.forEach(e -> sessionFactory.getCurrentSession().merge(e));
     }
+    */
 }

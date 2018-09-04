@@ -44,7 +44,6 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthResource authResource) {
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authResource.getUsernameOrEmail(),
@@ -75,12 +74,8 @@ public class AuthController {
         userResource.password = passwordEncoder.encode(userResource.password);
         userResource.roles = Collections.singleton(RoleMapper.INSTANCE.mapDomainToResource(role));
 
-        User user = new User.Builder()
-                .withUserResource(userResource).build();
-                // .withRoles(Collections.singleton(role))
-                // .build();
-
-        user.create();
+        User user = new User.Builder().withUserResource(userResource).build();
+        user = user.create();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")

@@ -77,6 +77,7 @@ public class DataConfig {
     }
 
     @Bean
+    @Profile({"principal", "integrationTest"}) // TODO, consider to remove this line in case of not using Spring DATA JPA
     public HibernateTransactionManager hcodeTransactionManager(@Qualifier("hcodeSessionFactory") SessionFactory sessionFactory) {
         log.info("--------->>> DataConfig, SETTING TRANSACTION MANAGER");
         HibernateTransactionManager transactionManager = new HibernateTransactionManager();

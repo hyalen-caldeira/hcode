@@ -1,6 +1,7 @@
 package us.hyalen.hcode.server.config;
 
 import org.apache.tomcat.jdbc.pool.DataSource;
+import org.hibernate.SessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.hibernate5.LocalSessionFactoryBean;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -75,6 +77,16 @@ public class TestDataConfig {
         localSessionFactoryBean.setPackagesToScan("us.hyalen.hcode.server.model");
 
         return localSessionFactoryBean;
+    }
+
+    @Bean
+    @Profile({"test"})
+    public HibernateTransactionManager hcodeTransactionManager(@Qualifier("hcodeSessionFactory") SessionFactory sessionFactory) {
+        log.info("--------->>> DataConfig, SETTING TRANSACTION MANAGER");
+        HibernateTransactionManager transactionManager = new HibernateTransactionManager();
+        transactionManager.setSessionFactory(sessionFactory);
+
+        return transactionManager;
     }
 
     @Bean
