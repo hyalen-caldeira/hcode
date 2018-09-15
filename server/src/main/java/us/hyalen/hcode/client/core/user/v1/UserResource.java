@@ -1,13 +1,12 @@
 package us.hyalen.hcode.client.core.user.v1;
 
-import lombok.Data;
 import lombok.EqualsAndHashCode;
 import us.hyalen.hcode.client.core.role.v1.RoleResource;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-import java.util.List;
+import java.util.Set;
 
 @EqualsAndHashCode
 public class UserResource {
@@ -28,7 +27,7 @@ public class UserResource {
     @Size(max = 40)
     public String username;
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 100)
     public String password;
-    public List<RoleResource> roles;
+    public Set<RoleResource> roles;
 }

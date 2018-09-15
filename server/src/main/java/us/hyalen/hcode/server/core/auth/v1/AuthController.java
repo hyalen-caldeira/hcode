@@ -19,6 +19,7 @@ import us.hyalen.hcode.client.core.user.v1.UserResource;
 import us.hyalen.hcode.server.core.ApiResponse;
 import us.hyalen.hcode.server.core.NotFoundException;
 import us.hyalen.hcode.server.core.role.v1.Role;
+import us.hyalen.hcode.server.core.role.v1.RoleMapper;
 import us.hyalen.hcode.server.core.user.v1.User;
 import us.hyalen.hcode.server.model.RoleName;
 import us.hyalen.hcode.server.security.JwtTokenProvider;
@@ -43,7 +44,6 @@ public class AuthController {
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody AuthResource authResource) {
-
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         authResource.getUsernameOrEmail(),
@@ -59,24 +59,23 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody UserResource userResource) {
-        if (User.existsByUsername(userResource.username)) {
+        if (User.existsByUsername(userResource.username))
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"),
                     HttpStatus.BAD_REQUEST);
-        }
 
-        if (User.existsByEmail(userResource.email)) {
+        if (User.existsByEmail(userResource.email))
             return new ResponseEntity(new ApiResponse(false, "Email Address already in use!"),
                     HttpStatus.BAD_REQUEST);
-        }
 
         // Creating user's account
         Role role = Role.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new NotFoundException("User Role not set."));
 
         userResource.password = passwordEncoder.encode(userResource.password);
-        User user = new User.Builder().withUserResource(userResource).build();//.withRoles(Collections.singleton(role)).build();
+        userResource.roles = Collections.singleton(RoleMapper.INSTANCE.mapDomainToResource(role));
 
-        user.create();
+        User user = new User.Builder().withUserResource(userResource).build();
+        user = user.create();
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath().path("/api/users/{username}")
