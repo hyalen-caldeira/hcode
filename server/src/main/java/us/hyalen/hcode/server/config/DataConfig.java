@@ -70,8 +70,8 @@ public class DataConfig {
         DataSource dataSource = new DataSource();
 
         dataSource.setUrl("jdbc:mysql://" + server + ":" + port + "/" + dbName + "?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false");
-        dataSource.setUsername("root");
-        dataSource.setPassword("Nicol#3113");
+        // dataSource.setUsername("");
+        // dataSource.setPassword("");
 
         return dataSource;
     }
